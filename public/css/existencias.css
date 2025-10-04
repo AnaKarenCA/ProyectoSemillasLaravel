@@ -1,0 +1,113 @@
+/* Hero Section */
+.hero-existencias {
+    position: relative;
+    text-align: center;
+    color: #fff;
+   padding: 30px;
+   margin: 0;
+}
+
+.hero-existencias::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #800000;
+    z-index: -1;
+}
+
+.hero-existencias h1 {
+    font-size: 2.2rem;
+    font-weight: bold;
+    margin: 0;
+}
+
+
+/* Contenedor general */
+.existencias-container {
+    width: 95%;      /* aprovecha casi todo el ancho */
+    margin: 20px auto; /* centrado */
+    
+}
+
+/* Filtros */
+.filters {
+    display: flex;
+    gap: 10px;
+    margin-top: 40px;
+    margin-bottom: 40px;
+
+}
+
+.filters input,
+.filters select {
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    flex: 1;
+}
+
+/* Tabla */
+#productosTable {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+#productosTable th {
+    background: #800000;
+    color: #fff;
+    padding: 12px;
+    text-align: left;
+}
+
+#productosTable td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #ddd;
+}
+
+/* Acciones */
+.btn-edit {
+    background: #83ff2579;
+    padding: 6px 12px;
+    border-radius: 6px;
+    text-decoration: none;
+    color: #000;
+    margin-right: 5px;
+}
+
+.btn-delete {
+    background: #dc3545;
+    color: #fff;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.btn-add {
+    display: inline-block;
+    margin-top: 15px;
+    padding: 10px 15px;
+    background: #800000;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 6px;
+}
+/* Contenedor de existencias */
+.existencias-wrapper {
+    width: 100%;        /* ocupa casi todo el ancho */
+    margin-left: 0;    /* pegado a la izquierda */
+    padding-left: 20px; /* un poco de respiro */
+}
+
+/* Para que la tabla no se vaya a la derecha */
+#productosTable {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}

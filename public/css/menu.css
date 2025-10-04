@@ -1,0 +1,68 @@
+body {
+    margin: 0;
+    padding: 0;
+    transition: margin-left 0.3s ease;
+}
+
+/* Estilos del menú */
+.menu {
+    background-color: #800000;
+    width: 250px;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: -250px; /* Oculto por defecto */
+    padding-top: 20px;
+    color: #FEF9E1;
+    box-shadow: 2px 0px 5px rgba(0, 0, 0, 0.2);
+    transition: left 0.3s ease;
+}
+
+.menu ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.menu li {
+    padding: 15px;
+    text-align: left;
+}
+
+.menu li a {
+    color: #FEF9E1 !important;
+    text-decoration: none !important;
+    display: flex;
+    align-items: center;
+}
+
+.menu li:hover {
+    background-color: #A31D1D;
+}
+
+.menu li a .material-symbols-outlined {
+    font-size: 24px;
+    margin-right: 10px;
+}
+
+/* Botón para abrir/cerrar menú */
+.menu-toggle {
+    position: fixed;
+    top: 15px;
+    left: 20px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    z-index: 1000;
+}
+
+/* Íconos animados */
+.menu-toggle span {
+    font-size: 32px;
+    color: #fff;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.menu-open {
+    margin-left: 250px;
+}

@@ -3,10 +3,13 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Usuario;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
+
+
+
 
 class AuthController extends Controller
 {
@@ -22,7 +25,7 @@ class AuthController extends Controller
             'password' => 'required',
         ]);
 
-        $user = Usuario::where('usuario', $request->username)->first();
+            $user = User::where('usuario', $request->username)->first();
 
         if ($user && Hash::check($request->password, $user->contrasena)) {
             Auth::login($user);

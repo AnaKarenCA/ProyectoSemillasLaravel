@@ -5,23 +5,23 @@ namespace App\Models;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-class Usuario extends Authenticatable
+class User extends Authenticatable
 {
     use Notifiable;
 
-    protected $table = 'usuarios'; // tu tabla real
-    protected $primaryKey = 'id_usuario'; // tu clave primaria
+    protected $table = 'usuarios';       // tu tabla antigua
+    protected $primaryKey = 'id_usuario'; // clave primaria
+    public $timestamps = false;          // si tu tabla no tiene created_at/updated_at
 
     protected $fillable = [
-        'usuario', 'nombre', 'contrasena',
-    ];
-
-    protected $hidden = [
+        'nombre',
+        'usuario',
         'contrasena',
+        // agrega otros campos que tengas
     ];
 
     public function getAuthPassword()
     {
-        return $this->contrasena;
+        return $this->contrasena; // porque tu campo de password se llama "contrasena"
     }
 }
