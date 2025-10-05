@@ -33,3 +33,22 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 });
+document.addEventListener("click", function (e) {
+    if (e.target.closest('a[href="#logout"]')) {
+        e.preventDefault();
+        // Crea y envía el formulario POST de logout
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = '/logout';
+
+        const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = '_token';
+        input.value = token;
+
+        form.appendChild(input);
+        document.body.appendChild(form);
+        form.submit();
+    }
+});
