@@ -31,47 +31,47 @@
                     <input type="password" id="password" name="password" required>
                     <button type="submit">Iniciar sesión</button>
                 </form>
-
                 @if ($errors->any())
-                    <script>
-                        document.addEventListener('DOMContentLoaded', function() {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Error',
-                                text: "{{ $errors->first() }}",
-                                timer: 5000,
-                                timerProgressBar: true,
-                                showConfirmButton: false
-                            });
-                        });
-                    </script>
-                @endif
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: "{{ $errors->first() }}",
+        timer: 5000,
+        timerProgressBar: true,
+        showConfirmButton: false
+    });
+});
+</script>
+@endif
+
+@if (session('success'))
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    Swal.fire({
+        icon: 'success',
+        title: 'Éxito',
+        text: "{{ session('success') }}",
+        timer: 5000,
+        timerProgressBar: true,
+        showConfirmButton: false
+    });
+});
+</script>
+@endif
+
             </div>
 
             <!-- RECUPERAR CONTRASEÑA -->
             <div class="card" id="recoverCard">
-                <form method="POST" action="{{ route('recuperar') }}" id="recoverForm">
+                <form id="recoverForm">
                     @csrf
                     <h2>Recuperar contraseña</h2>
                     <label for="email">Correo electrónico</label>
                     <input type="email" id="email" name="correo_electronico" required>
                     <button type="submit">Recuperar</button>
                 </form>
-
-                @if(session('success'))
-                    <script>
-                        document.addEventListener('DOMContentLoaded', function() {
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Éxito',
-                                text: "{{ session('success') }}",
-                                timer: 5000,
-                                timerProgressBar: true,
-                                showConfirmButton: false
-                            });
-                        });
-                    </script>
-                @endif
             </div>
         </div>
     </div>
@@ -85,9 +85,8 @@
             const recoverTab = document.getElementById('recoverTab');
             const loginCard = document.getElementById('loginCard');
             const recoverCard = document.getElementById('recoverCard');
-            const usernameInput = document.getElementById('username');
 
-            // Funcionalidad de las pestañas
+            // Cambiar pestañas
             loginTab.addEventListener('click', () => {
                 loginTab.classList.add('active');
                 recoverTab.classList.remove('active');
@@ -102,44 +101,42 @@
                 loginCard.classList.remove('active');
             });
 
-            // Validación del campo "Nombre de usuario"
-            usernameInput.addEventListener('blur', () => {
-                const usernameValue = usernameInput.value;
-                if (/\d/.test(usernameValue)) {
-                    Swal.fire('Error', 'No se permiten números en el nombre de usuario.', 'error');
-                    usernameInput.value = '';
-                }
-            });
-
-            // Manejo de la recuperación de contraseña
+            // Enviar recuperación por AJAX
             document.getElementById('recoverForm').addEventListener('submit', function(event) {
                 event.preventDefault();
                 let email = document.getElementById('email').value;
+
                 if (!email) {
-                    Swal.fire('Error', '⚠️ Ingresa tu correo.', 'error');
+                    Swal.fire('Error', 'Ingresa tu correo electrónico.', 'error');
                     return;
                 }
-                fetch("{{ route('recuperar') }}", {
+
+                fetch("{{ route('password.recovery.send') }}", {
                     method: 'POST',
                     body: new URLSearchParams({ correo_electronico: email }),
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'X-CSRF-TOKEN': '{{ csrf_token() }}' }
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    }
                 })
                 .then(response => response.json())
                 .then(data => {
                     Swal.fire({
-                        icon: data.status === "success" ? 'success' : 'error',
-                        title: data.status === "success" ? 'Éxito' : 'Error',
+                        icon: data.status === 'success' ? 'success' : 'error',
+                        title: data.status === 'success' ? 'Éxito' : 'Error',
                         text: data.message
                     });
                 })
                 .catch(error => {
-                    console.error("Error:", error);
+                    console.error(error);
+                    Swal.fire('Error', 'Ocurrió un problema al procesar la solicitud.', 'error');
                 });
             });
         });
     </script>
 </body>
 </html>
+
 <style>
 /* --- GENERAL --- */
 body {
