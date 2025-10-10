@@ -17,7 +17,7 @@ class VentaController extends Controller
             ->get();
 
         $productos = DB::table('productos')
-            ->select('id_producto', 'nombre', 'precio', 'stock', 'categoria_id')
+            ->select('id_producto', 'nombre', 'precio', 'stock', 'categoria_id', 'estado')
             ->where('estado', 'activo')
             ->get()
             ->map(function($p) {
@@ -50,7 +50,26 @@ class VentaController extends Controller
                 'fecha' => now(),
             ]);
 
+            $productosActualizados = [];
+
             foreach ($data['venta_data'] as $item) {
+
+                // Bloquear producto
+                $producto = DB::table('productos')
+                    ->where('id_producto', $item['id'])
+                    ->lockForUpdate()
+                    ->first();
+
+                if (!$producto) {
+                    throw new \Exception("Producto no encontrado: {$item['id']}");
+                }
+
+                // Validar stock
+                if ($producto->stock < $item['cantidad']) {
+                    throw new \Exception("No hay suficiente stock disponible para el producto {$producto->nombre}");
+                }
+
+                // Insertar detalle de venta
                 DB::table('detalle_ventas')->insert([
                     'id_venta' => $venta_id,
                     'id_producto' => $item['id'],
@@ -58,16 +77,36 @@ class VentaController extends Controller
                     'precio' => $item['precio'],
                 ]);
 
+                // Actualizar stock **sin permitir negativos**
                 DB::table('productos')
                     ->where('id_producto', $item['id'])
+                    ->where('stock', '>=', $item['cantidad'])
                     ->decrement('stock', $item['cantidad']);
+
+                // Obtener nuevo stock
+                $nuevoStock = DB::table('productos')
+                    ->where('id_producto', $item['id'])
+                    ->value('stock');
+
+                $productosActualizados[] = [
+                    'id_producto' => $item['id'],
+                    'stock' => $nuevoStock,
+                ];
             }
 
             DB::commit();
-            return response()->json(['success' => true, 'message' => 'Venta realizada con éxito']);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Venta realizada con éxito',
+                'productos' => $productosActualizados,
+            ]);
         } catch (\Exception $e) {
             DB::rollback();
-            return response()->json(['success' => false, 'message' => 'Error al procesar la venta: ' . $e->getMessage()]);
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al procesar la venta: ' . $e->getMessage(),
+            ]);
         }
     }
 }

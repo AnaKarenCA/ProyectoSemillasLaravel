@@ -20,29 +20,26 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let carrito = [];
 
-    // ==== 3. Mostrar productos en tabla ====
-function renderProductos(list = productos) {
-    tableBody.innerHTML = "";
-
-    // 🔹 Limitar a los primeros 5 resultados
-    let limitados = list.slice(0, 5);
-
-    limitados.forEach((prod) => {
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-            <td>${prod.nombre}</td>
-            <td>$${parseFloat(prod.precio).toFixed(2)}</td>
-            <td>${prod.stock}</td>
-            <td>
-                <button class="btn btn-sm btn-success add-btn" data-id="${prod.id_producto}">
-                    Agregar
-                </button>
-            </td>
-        `;
-        tableBody.appendChild(tr);
-    });
-}
-renderProductos();
+    // ==== 3. Renderizar productos disponibles ====
+    function renderProductos(list = productos) {
+        tableBody.innerHTML = "";
+        const limitados = list.slice(0, 5); // Limitar a 5 resultados
+        limitados.forEach((prod) => {
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
+                <td>${prod.nombre}</td>
+                <td>$${parseFloat(prod.precio).toFixed(2)}</td>
+                <td>${prod.stock}</td>
+                <td>
+                    <button class="btn btn-sm btn-success add-btn" data-id="${prod.id_producto}" ${prod.stock <= 0 ? 'disabled' : ''}>
+                        Agregar
+                    </button>
+                </td>
+            `;
+            tableBody.appendChild(tr);
+        });
+    }
+    renderProductos();
 
     // ==== 4. Filtrar productos ====
     const searchInput = document.getElementById("product-search");
@@ -58,7 +55,7 @@ renderProductos();
 
         sliderValue.textContent = precioMax;
 
-        let filtrados = productos.filter((p) => {
+        const filtrados = productos.filter((p) => {
             let matchNombre = p.nombre.toLowerCase().includes(texto);
             let matchCategoria = categoria ? p.categoria_id == categoria : true;
             let matchPrecio = p.precio <= precioMax;
@@ -78,119 +75,99 @@ renderProductos();
             filterProductos();
         }
     });
-document.addEventListener("click", (e) => {
-    if (e.target.classList.contains("add-btn")) {
-        let id = e.target.dataset.id;
-        let producto = productos.find((p) => p.id_producto == id);
 
-        if (!producto) return;
-
-        let item = carrito.find((i) => i.id == id);
-        if (item) {
-            if (item.cantidad < producto.stock) {
-                item.cantidad++;
-            }
-        } else {
-            carrito.push({
-                id: producto.id_producto,
-                nombre: producto.nombre,
-                precio: parseFloat(producto.precio),
-                cantidad: 1,
-                stock: producto.stock
-            });
-        }
-        renderCarrito();
-    }
-
-    if (e.target.classList.contains("remove-btn")) {
-        let id = e.target.dataset.id;
-        carrito = carrito.filter((i) => i.id != id);
-        renderCarrito();
-    }
-});
     // ==== 5. Manejar carrito ====
     document.addEventListener("click", (e) => {
         if (e.target.classList.contains("add-btn")) {
-            let id = e.target.dataset.id;
-            let producto = productos.find((p) => p.id_producto == id);
-
+            const id = e.target.dataset.id;
+            const producto = productos.find((p) => p.id_producto == id);
             if (!producto) return;
 
             let item = carrito.find((i) => i.id == id);
+
             if (item) {
                 if (item.cantidad < producto.stock) {
                     item.cantidad++;
+                } else {
+                    alert('No puedes agregar más unidades, no hay suficiente stock.');
+                    return;
                 }
             } else {
+                if (producto.stock <= 0) {
+                    alert('Este producto no tiene stock disponible.');
+                    return;
+                }
                 carrito.push({
                     id: producto.id_producto,
                     nombre: producto.nombre,
                     precio: parseFloat(producto.precio),
                     cantidad: 1,
+                    stock: producto.stock
                 });
             }
+
             renderCarrito();
         }
 
         if (e.target.classList.contains("remove-btn")) {
-            let id = e.target.dataset.id;
+            const id = e.target.dataset.id;
             carrito = carrito.filter((i) => i.id != id);
             renderCarrito();
         }
     });
 
-function renderCarrito() {
-    saleBody.innerHTML = "";
-    let total = 0;
+    function renderCarrito() {
+        saleBody.innerHTML = "";
+        let total = 0;
 
-    carrito.forEach((item) => {
-        let subtotal = item.cantidad * item.precio;
-        total += subtotal;
+        carrito.forEach((item) => {
+            const subtotal = item.cantidad * item.precio;
+            total += subtotal;
 
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-            <td>${item.nombre}</td>
-            <td>
-                <input type="number" 
-                       min="1" 
-                       max="${item.stock}" 
-                       value="${item.cantidad}" 
-                       class="cantidad-input" 
-                       data-id="${item.id}">
-            </td>
-            <td>$${item.precio.toFixed(2)}</td>
-            <td>$${subtotal.toFixed(2)}</td>
-            <td><button class="btn btn-sm btn-danger remove-btn" data-id="${item.id}">Quitar</button></td>
-        `;
-        saleBody.appendChild(tr);
-    });
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
+                <td>${item.nombre}</td>
+                <td>
+                    <input type="number" 
+                           min="1" 
+                           max="${item.stock}" 
+                           value="${item.cantidad}" 
+                           class="cantidad-input" 
+                           data-id="${item.id}">
+                </td>
+                <td>$${item.precio.toFixed(2)}</td>
+                <td>$${subtotal.toFixed(2)}</td>
+                <td><button class="btn btn-sm btn-danger remove-btn" data-id="${item.id}">Quitar</button></td>
+            `;
+            saleBody.appendChild(tr);
+        });
 
-    totalField.textContent = total.toFixed(2);
-    calcularCambio();
-}
-document.addEventListener("input", (e) => {
-    if (e.target.classList.contains("cantidad-input")) {
-        let id = e.target.dataset.id;
-        let nuevaCantidad = parseInt(e.target.value);
-
-        carrito = carrito.map((item) =>
-            item.id == id
-                ? { ...item, cantidad: Math.max(1, Math.min(nuevaCantidad, item.stock)) }
-                : item
-        );
-        renderCarrito();
+        totalField.textContent = total.toFixed(2);
+        calcularCambio();
     }
-});
 
+    // Actualizar cantidades manualmente
+    document.addEventListener("input", (e) => {
+        if (e.target.classList.contains("cantidad-input")) {
+            const id = e.target.dataset.id;
+            let nuevaCantidad = parseInt(e.target.value);
 
+            carrito = carrito.map((item) => 
+                item.id == id
+                    ? { ...item, cantidad: Math.max(1, Math.min(nuevaCantidad, item.stock)) }
+                    : item
+            );
+            renderCarrito();
+        }
+    });
 
     // ==== 6. Calcular cambio ====
     cambioInput.addEventListener("keyup", calcularCambio);
 
     function calcularCambio() {
-        let pago = parseFloat(cambioInput.value) || 0;
-        let total = parseFloat(totalField.textContent) || 0;
-        let cambio = pago - total;
+        const pago = parseFloat(cambioInput.value) || 0;
+        const total = parseFloat(totalField.textContent) || 0;
+        const cambio = pago - total;
         changeTotal.textContent = cambio >= 0 ? cambio.toFixed(2) : "0.00";
     }
 
@@ -201,8 +178,8 @@ document.addEventListener("input", (e) => {
             return;
         }
 
-        let total = parseFloat(totalField.textContent);
-        let data = {
+        const total = parseFloat(totalField.textContent);
+        const data = {
             venta_data: carrito.map((i) => ({
                 id: i.id,
                 cantidad: i.cantidad,
@@ -215,22 +192,30 @@ document.addEventListener("input", (e) => {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "X-CSRF-TOKEN": document
-                    .querySelector('meta[name="csrf-token"]')
-                    .getAttribute("content"),
+                "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content"),
             },
             body: JSON.stringify(data),
         })
-            .then((res) => res.json())
-            .then((res) => {
-                if (res.success) {
-                    alert(res.message);
-                    carrito = [];
-                    renderCarrito();
-                } else {
-                    alert(res.message);
-                }
-            })
-            .catch((err) => console.error(err));
+        .then((res) => res.json())
+        .then((res) => {
+            if (res.success) {
+                alert(res.message);
+
+                // Actualiza stock local según lo enviado por backend
+                res.productos.forEach(item => {
+                    let prod = productos.find(p => p.id_producto === item.id_producto);
+                    if (prod) prod.stock = item.stock;
+                });
+
+                // Limpiar carrito y actualizar tablas
+                carrito = [];
+                renderCarrito();
+                renderProductos();
+            } else {
+                alert(res.message);
+            }
+        })
+
+        .catch((err) => console.error(err));
     });
 });
