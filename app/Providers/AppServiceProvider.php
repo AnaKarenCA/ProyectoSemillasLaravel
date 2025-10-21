@@ -9,10 +9,13 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Register any application services.
      */
-    public function register(): void
-    {
-        //
+   public function register()
+{
+    if ($this->app->environment('local', 'testing')) {
+        $this->app->register(\Laravel\Dusk\DuskServiceProvider::class);
     }
+}
+
 
     /**
      * Bootstrap any application services.

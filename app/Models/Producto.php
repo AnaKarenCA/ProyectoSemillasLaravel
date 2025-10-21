@@ -10,7 +10,19 @@ class Producto extends Model
     protected $primaryKey = 'id_producto';
     public $timestamps = false;
 
-    protected $fillable = ['nombre', 'precio', 'stock', 'categoria_id'];
+    protected $fillable = [
+        'nombre',
+        'descripcion',
+        'precio',
+        'costo',
+        'stock',
+        'stock_min',
+        'unidad_venta',
+        'categoria_id',
+        'ubicacion',
+        'estado',
+        'imagen'
+    ];
 
     public function categoria()
     {

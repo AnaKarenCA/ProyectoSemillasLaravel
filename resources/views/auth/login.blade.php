@@ -45,7 +45,6 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 @endif
-
 @if (session('success'))
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -60,10 +59,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 @endif
-
             </div>
-
-            <!-- RECUPERAR CONTRASEÑA -->
             <div class="card" id="recoverCard">
                 <form id="recoverForm">
                     @csrf
@@ -75,17 +71,14 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
         </div>
     </div>
-
     <script src="{{ asset('js/index.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const loginTab = document.getElementById('loginTab');
             const recoverTab = document.getElementById('recoverTab');
             const loginCard = document.getElementById('loginCard');
             const recoverCard = document.getElementById('recoverCard');
-
             // Cambiar pestañas
             loginTab.addEventListener('click', () => {
                 loginTab.classList.add('active');
@@ -93,24 +86,20 @@ document.addEventListener('DOMContentLoaded', function() {
                 loginCard.classList.add('active');
                 recoverCard.classList.remove('active');
             });
-
             recoverTab.addEventListener('click', () => {
                 recoverTab.classList.add('active');
                 loginTab.classList.remove('active');
                 recoverCard.classList.add('active');
                 loginCard.classList.remove('active');
             });
-
             // Enviar recuperación por AJAX
             document.getElementById('recoverForm').addEventListener('submit', function(event) {
                 event.preventDefault();
                 let email = document.getElementById('email').value;
-
                 if (!email) {
                     Swal.fire('Error', 'Ingresa tu correo electrónico.', 'error');
                     return;
                 }
-
                 fetch("{{ route('password.recovery.send') }}", {
                     method: 'POST',
                     body: new URLSearchParams({ correo_electronico: email }),
