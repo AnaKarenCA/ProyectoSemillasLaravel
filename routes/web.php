@@ -31,6 +31,11 @@ Route::resource('compras', App\Http\Controllers\CompraController::class);
 
 
 
+use App\Http\Controllers\ProveedorController;
+
+Route::middleware(['auth'])->group(function () {
+    Route::resource('proveedores', ProveedorController::class);
+});
 
 
 

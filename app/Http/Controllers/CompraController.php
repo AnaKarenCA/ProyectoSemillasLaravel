@@ -14,11 +14,11 @@ class CompraController extends Controller
         return view('compras.index', compact('compras'));
     }
 
-    public function create()
-    {
-        $proveedores = Proveedor::all();
-        return view('compras.create', compact('proveedores'));
-    }
+   public function create()
+{
+    $proveedores = Proveedor::all(); // trae todos los proveedores
+    return view('compras.create', compact('proveedores'));
+}
 
     public function store(Request $request)
     {
