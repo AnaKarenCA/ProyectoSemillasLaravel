@@ -9,6 +9,13 @@ use App\Http\Controllers\VentaController;
 
 use App\Http\Controllers\ReportesController;
 
+use App\Http\Controllers\InventarioController;
+
+Route::resource('inventarios', InventarioController::class);
+Route::resource('inventarios', App\Http\Controllers\InventarioController::class);
+
+
+
 Route::get('/', [AuthController::class, 'showLogin']);
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
@@ -17,6 +24,15 @@ Route::get('/recuperar', [AuthController::class, 'showRecoveryForm'])
     ->name('password.recovery.form');
 Route::post('/recuperar', [AuthController::class, 'sendTemporaryPassword'])
     ->name('password.recovery.send');
+
+Route::resource('clientes', App\Http\Controllers\ClienteController::class);
+
+Route::resource('compras', App\Http\Controllers\CompraController::class);
+
+
+
+
+
 
 
 

@@ -21,7 +21,7 @@ class VentaController extends Controller
             ->where('estado', 'activo')
             ->get()
             ->map(function($p) {
-                return (array) $p;  // Convierte a array
+                return (array) $p;
             })
             ->toArray();
 
