@@ -3,19 +3,19 @@
 @section('title', 'Proveedores')
 
 @section('content')
-<section class="hero-section py-4">
-    <h1 class="text-center text-white">Lista de Proveedores</h1>
+<section class="hero-section text-center mb-4">
+    <h1>Lista de Proveedores</h1>
 </section>
 
-<div class="container mt-4">
-    <a href="{{ route('proveedores.create') }}" class="btn btn-success mb-3">Agregar Proveedor</a>
+<div class="container">
+    <a href="{{ route('proveedores.create') }}" class="btn btn-maroon mb-3">➕ Agregar Proveedor</a>
 
     @if(session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>
     @endif
 
-    <table class="table table-bordered table-striped">
-        <thead class="table-dark">
+    <table class="table table-bordered table-striped table-maroon">
+        <thead>
             <tr>
                 <th>ID</th>
                 <th>Nombre</th>
@@ -36,11 +36,11 @@
                 <td>{{ $p->direccion }}</td>
                 <td>{{ $p->estado }}</td>
                 <td>
-                    <a href="{{ route('proveedores.edit', $p->id_proveedor) }}" class="btn btn-primary btn-sm">Editar</a>
+                    <a href="{{ route('proveedores.edit', $p->id_proveedor) }}" class="btn btn-primary btn-sm">✏️</a>
                     <form action="{{ route('proveedores.destroy', $p->id_proveedor) }}" method="POST" class="d-inline">
                         @csrf
                         @method('DELETE')
-                        <button class="btn btn-danger btn-sm" onclick="return confirm('¿Eliminar proveedor?')">Eliminar</button>
+                        <button class="btn btn-danger btn-sm" onclick="return confirm('¿Eliminar proveedor?')">🗑️</button>
                     </form>
                 </td>
             </tr>

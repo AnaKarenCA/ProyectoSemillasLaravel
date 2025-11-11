@@ -11,7 +11,7 @@ class Proveedor extends Model
 
     protected $table = 'proveedores';
     protected $primaryKey = 'id_proveedor';
-    public $timestamps = true;
+    public $timestamps = false;
 
     protected $fillable = [
         'nombre',
@@ -19,5 +19,9 @@ class Proveedor extends Model
         'direccion',
         'correo',
         'estado',
+    ];
+
+    protected $attributes = [
+        'estado' => 'Activo',
     ];
 }

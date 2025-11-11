@@ -17,13 +17,14 @@ class VentaController extends Controller
             ->get();
 
         $productos = DB::table('productos')
-            ->select('id_producto', 'nombre', 'precio', 'stock', 'categoria_id', 'estado')
+            ->select('id_producto', 'codigo', 'nombre', 'precio', 'stock', 'categoria_id', 'estado')
             ->where('estado', 'activo')
             ->get()
             ->map(function($p) {
                 return (array) $p;
             })
             ->toArray();
+
 
         $maxPrecio = collect($productos)->max('precio') ?? 0;
 

@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <title>Dashboard for C:\xampp\htdocs\ProyectoSemillasLaravel\app\Http</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="../_css/bootstrap.min.css?v=11.0.11" rel="stylesheet" type="text/css">
+  <link href="../_css/nv.d3.min.css?v=11.0.11" rel="stylesheet" type="text/css">
+  <link href="../_css/style.css?v=11.0.11" rel="stylesheet" type="text/css">
+  <link href="../_css/custom.css" rel="stylesheet" type="text/css">
+ </head>
+ <body>
+  <header>
+   <div class="container-fluid">
+    <div class="row">
+     <div class="col-md-12">
+      <nav aria-label="breadcrumb">
+       <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="../index.html">C:\xampp\htdocs\ProyectoSemillasLaravel\app</a></li>
+         <li class="breadcrumb-item"><a href="index.html">Http</a></li>
+         <li class="breadcrumb-item active">(Dashboard)</li>
+
+       </ol>
+      </nav>
+     </div>
+    </div>
+   </div>
+  </header>
+  <div class="container-fluid">
+   <div class="row">
+    <div class="col-md-12">
+     <h2>Classes</h2>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Coverage Distribution</h3>
+     <div id="classCoverageDistribution" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Complexity</h3>
+     <div id="classComplexity" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Insufficient Coverage</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Class</th>
+         <th class="text-right">Coverage</th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="Controllers/AutorizacionController.php.html#8">App\Http\Controllers\AutorizacionController</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/ClienteController.php.html#8">App\Http\Controllers\ClienteController</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/CompraController.php.html#13">App\Http\Controllers\CompraController</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/ConfiguracionController.php.html#12">App\Http\Controllers\ConfiguracionController</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/DevolucionController.php.html#8">App\Http\Controllers\DevolucionController</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/ExistenciasController.php.html#9">App\Http\Controllers\ExistenciasController</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/HomeController.php.html#9">App\Http\Controllers\HomeController</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/InventarioController.php.html#11">App\Http\Controllers\InventarioController</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/MenuController.php.html#9">App\Http\Controllers\MenuController</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/ProductoController.php.html#9">App\Http\Controllers\ProductoController</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/ProveedorController.php.html#8">App\Http\Controllers\ProveedorController</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/RecuperarController.php.html#7">App\Http\Controllers\RecuperarController</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/ReportesController.php.html#10">App\Http\Controllers\ReportesController</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/VentaController.php.html#9">App\Http\Controllers\VentaController</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/AuthController.php.html#15">App\Http\Controllers\AuthController</a></td><td class="text-right">9%</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Project Risks</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Class</th>
+         <th class="text-right"><abbr title="Change Risk Anti-Patterns (CRAP) Index">CRAP</abbr></th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="Controllers/CompraController.php.html#13">App\Http\Controllers\CompraController</a></td><td class="text-right">210</td></tr>
+       <tr><td><a href="Controllers/ReportesController.php.html#10">App\Http\Controllers\ReportesController</a></td><td class="text-right">110</td></tr>
+       <tr><td><a href="Controllers/InventarioController.php.html#11">App\Http\Controllers\InventarioController</a></td><td class="text-right">90</td></tr>
+       <tr><td><a href="Controllers/ExistenciasController.php.html#9">App\Http\Controllers\ExistenciasController</a></td><td class="text-right">72</td></tr>
+       <tr><td><a href="Controllers/AuthController.php.html#15">App\Http\Controllers\AuthController</a></td><td class="text-right">68</td></tr>
+       <tr><td><a href="Controllers/ConfiguracionController.php.html#12">App\Http\Controllers\ConfiguracionController</a></td><td class="text-right">42</td></tr>
+       <tr><td><a href="Controllers/VentaController.php.html#9">App\Http\Controllers\VentaController</a></td><td class="text-right">42</td></tr>
+       <tr><td><a href="Controllers/MenuController.php.html#9">App\Http\Controllers\MenuController</a></td><td class="text-right">6</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-12">
+     <h2>Methods</h2>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Coverage Distribution</h3>
+     <div id="methodCoverageDistribution" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Complexity</h3>
+     <div id="methodComplexity" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Insufficient Coverage</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Method</th>
+         <th class="text-right">Coverage</th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="Controllers/AuthController.php.html#41"><abbr title="App\Http\Controllers\AuthController::logout">logout</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/AuthController.php.html#47"><abbr title="App\Http\Controllers\AuthController::sendTemporaryPassword">sendTemporaryPassword</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/AuthController.php.html#91"><abbr title="App\Http\Controllers\AuthController::generateTempPassword">generateTempPassword</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/AutorizacionController.php.html#13"><abbr title="App\Http\Controllers\AutorizacionController::index">index</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/AutorizacionController.php.html#21"><abbr title="App\Http\Controllers\AutorizacionController::create">create</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/AutorizacionController.php.html#29"><abbr title="App\Http\Controllers\AutorizacionController::store">store</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/AutorizacionController.php.html#37"><abbr title="App\Http\Controllers\AutorizacionController::show">show</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/AutorizacionController.php.html#45"><abbr title="App\Http\Controllers\AutorizacionController::edit">edit</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/AutorizacionController.php.html#53"><abbr title="App\Http\Controllers\AutorizacionController::update">update</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/AutorizacionController.php.html#61"><abbr title="App\Http\Controllers\AutorizacionController::destroy">destroy</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/ClienteController.php.html#11"><abbr title="App\Http\Controllers\ClienteController::index">index</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/ClienteController.php.html#18"><abbr title="App\Http\Controllers\ClienteController::create">create</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/ClienteController.php.html#24"><abbr title="App\Http\Controllers\ClienteController::store">store</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/ClienteController.php.html#40"><abbr title="App\Http\Controllers\ClienteController::edit">edit</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/ClienteController.php.html#47"><abbr title="App\Http\Controllers\ClienteController::update">update</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/ClienteController.php.html#65"><abbr title="App\Http\Controllers\ClienteController::destroy">destroy</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/CompraController.php.html#15"><abbr title="App\Http\Controllers\CompraController::index">index</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/CompraController.php.html#24"><abbr title="App\Http\Controllers\CompraController::create">create</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/CompraController.php.html#32"><abbr title="App\Http\Controllers\CompraController::store">store</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/CompraController.php.html#100"><abbr title="App\Http\Controllers\CompraController::edit">edit</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/CompraController.php.html#106"><abbr title="App\Http\Controllers\CompraController::update">update</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/CompraController.php.html#125"><abbr title="App\Http\Controllers\CompraController::destroy">destroy</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/ConfiguracionController.php.html#14"><abbr title="App\Http\Controllers\ConfiguracionController::index">index</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/ConfiguracionController.php.html#23"><abbr title="App\Http\Controllers\ConfiguracionController::update">update</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/ConfiguracionController.php.html#52"><abbr title="App\Http\Controllers\ConfiguracionController::store">store</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/ConfiguracionController.php.html#71"><abbr title="App\Http\Controllers\ConfiguracionController::destroy">destroy</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/DevolucionController.php.html#13"><abbr title="App\Http\Controllers\DevolucionController::index">index</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/DevolucionController.php.html#21"><abbr title="App\Http\Controllers\DevolucionController::create">create</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/DevolucionController.php.html#29"><abbr title="App\Http\Controllers\DevolucionController::store">store</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/DevolucionController.php.html#37"><abbr title="App\Http\Controllers\DevolucionController::show">show</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/DevolucionController.php.html#45"><abbr title="App\Http\Controllers\DevolucionController::edit">edit</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/DevolucionController.php.html#53"><abbr title="App\Http\Controllers\DevolucionController::update">update</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/DevolucionController.php.html#61"><abbr title="App\Http\Controllers\DevolucionController::destroy">destroy</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/ExistenciasController.php.html#11"><abbr title="App\Http\Controllers\ExistenciasController::index">index</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/ExistenciasController.php.html#18"><abbr title="App\Http\Controllers\ExistenciasController::create">create</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/ExistenciasController.php.html#24"><abbr title="App\Http\Controllers\ExistenciasController::store">store</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/ExistenciasController.php.html#38"><abbr title="App\Http\Controllers\ExistenciasController::edit">edit</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/ExistenciasController.php.html#45"><abbr title="App\Http\Controllers\ExistenciasController::update">update</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/ExistenciasController.php.html#60"><abbr title="App\Http\Controllers\ExistenciasController::destroy">destroy</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/HomeController.php.html#11"><abbr title="App\Http\Controllers\HomeController::index">index</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/InventarioController.php.html#13"><abbr title="App\Http\Controllers\InventarioController::index">index</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/InventarioController.php.html#39"><abbr title="App\Http\Controllers\InventarioController::create">create</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/InventarioController.php.html#45"><abbr title="App\Http\Controllers\InventarioController::store">store</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/InventarioController.php.html#71"><abbr title="App\Http\Controllers\InventarioController::show">show</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/InventarioController.php.html#77"><abbr title="App\Http\Controllers\InventarioController::edit">edit</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/InventarioController.php.html#84"><abbr title="App\Http\Controllers\InventarioController::update">update</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/InventarioController.php.html#100"><abbr title="App\Http\Controllers\InventarioController::destroy">destroy</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/MenuController.php.html#11"><abbr title="App\Http\Controllers\MenuController::obtenerMenus">obtenerMenus</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/ProductoController.php.html#11"><abbr title="App\Http\Controllers\ProductoController::index">index</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/ProductoController.php.html#17"><abbr title="App\Http\Controllers\ProductoController::create">create</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/ProductoController.php.html#23"><abbr title="App\Http\Controllers\ProductoController::store">store</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/ProductoController.php.html#36"><abbr title="App\Http\Controllers\ProductoController::edit">edit</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/ProductoController.php.html#43"><abbr title="App\Http\Controllers\ProductoController::update">update</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/ProductoController.php.html#58"><abbr title="App\Http\Controllers\ProductoController::destroy">destroy</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/ProveedorController.php.html#10"><abbr title="App\Http\Controllers\ProveedorController::index">index</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/ProveedorController.php.html#16"><abbr title="App\Http\Controllers\ProveedorController::create">create</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/ProveedorController.php.html#21"><abbr title="App\Http\Controllers\ProveedorController::store">store</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/ProveedorController.php.html#36"><abbr title="App\Http\Controllers\ProveedorController::show">show</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/ProveedorController.php.html#41"><abbr title="App\Http\Controllers\ProveedorController::edit">edit</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/ProveedorController.php.html#46"><abbr title="App\Http\Controllers\ProveedorController::update">update</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/ProveedorController.php.html#61"><abbr title="App\Http\Controllers\ProveedorController::destroy">destroy</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/RecuperarController.php.html#9"><abbr title="App\Http\Controllers\RecuperarController::send">send</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/ReportesController.php.html#12"><abbr title="App\Http\Controllers\ReportesController::index">index</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/ReportesController.php.html#20"><abbr title="App\Http\Controllers\ReportesController::generar">generar</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/VentaController.php.html#11"><abbr title="App\Http\Controllers\VentaController::index">index</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/VentaController.php.html#34"><abbr title="App\Http\Controllers\VentaController::store">store</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/AuthController.php.html#22"><abbr title="App\Http\Controllers\AuthController::login">login</abbr></a></td><td class="text-right">36%</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Project Risks</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Method</th>
+         <th class="text-right"><abbr title="Change Risk Anti-Patterns (CRAP) Index">CRAP</abbr></th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="Controllers/CompraController.php.html#32"><abbr title="App\Http\Controllers\CompraController::store">store</abbr></a></td><td class="text-right">90</td></tr>
+       <tr><td><a href="Controllers/ReportesController.php.html#20"><abbr title="App\Http\Controllers\ReportesController::generar">generar</abbr></a></td><td class="text-right">90</td></tr>
+       <tr><td><a href="Controllers/VentaController.php.html#34"><abbr title="App\Http\Controllers\VentaController::store">store</abbr></a></td><td class="text-right">30</td></tr>
+       <tr><td><a href="Controllers/AuthController.php.html#47"><abbr title="App\Http\Controllers\AuthController::sendTemporaryPassword">sendTemporaryPassword</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Controllers/ConfiguracionController.php.html#23"><abbr title="App\Http\Controllers\ConfiguracionController::update">update</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Controllers/InventarioController.php.html#45"><abbr title="App\Http\Controllers\InventarioController::store">store</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Controllers/ExistenciasController.php.html#24"><abbr title="App\Http\Controllers\ExistenciasController::store">store</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Controllers/ExistenciasController.php.html#45"><abbr title="App\Http\Controllers\ExistenciasController::update">update</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Controllers/MenuController.php.html#11"><abbr title="App\Http\Controllers\MenuController::obtenerMenus">obtenerMenus</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Controllers/AuthController.php.html#22"><abbr title="App\Http\Controllers\AuthController::login">login</abbr></a></td><td class="text-right">5</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+   </div>
+   <footer>
+    <hr/>
+    <p>
+     <small>Generated by <a href="https://github.com/sebastianbergmann/php-code-coverage" target="_top">php-code-coverage 11.0.11</a> using <a href="https://www.php.net/" target="_top">PHP 8.2.12</a> and <a href="https://phpunit.de/">PHPUnit 11.5.43</a> at Mon Nov 10 18:00:10 UTC 2025.</small>
+    </p>
+   </footer>
+  </div>
+  <script src="../_js/jquery.min.js?v=11.0.11" type="text/javascript"></script>
+  <script src="../_js/d3.min.js?v=11.0.11" type="text/javascript"></script>
+  <script src="../_js/nv.d3.min.js?v=11.0.11" type="text/javascript"></script>
+  <script type="text/javascript">
+$(document).ready(function() {
+  nv.addGraph(function() {
+    var chart = nv.models.multiBarChart();
+    chart.tooltips(false)
+      .showControls(false)
+      .showLegend(false)
+      .reduceXTicks(false)
+      .staggerLabels(true)
+      .yAxis.tickFormat(d3.format('d'));
+
+    d3.select('#classCoverageDistribution svg')
+      .datum(getCoverageDistributionData([14,1,0,0,0,0,0,0,0,0,0,1], "Class Coverage"))
+      .transition().duration(500).call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  nv.addGraph(function() {
+    var chart = nv.models.multiBarChart();
+    chart.tooltips(false)
+      .showControls(false)
+      .showLegend(false)
+      .reduceXTicks(false)
+      .staggerLabels(true)
+      .yAxis.tickFormat(d3.format('d'));
+
+    d3.select('#methodCoverageDistribution svg')
+      .datum(getCoverageDistributionData([66,0,0,0,1,0,0,0,0,0,0,1], "Method Coverage"))
+      .transition().duration(500).call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  function getCoverageDistributionData(data, label) {
+    var labels = [
+      '0%',
+      '0-10%',
+      '10-20%',
+      '20-30%',
+      '30-40%',
+      '40-50%',
+      '50-60%',
+      '60-70%',
+      '70-80%',
+      '80-90%',
+      '90-100%',
+      '100%'
+    ];
+    var values = [];
+    $.each(labels, function(key) {
+      values.push({x: labels[key], y: data[key]});
+    });
+
+    return [
+      {
+        key: label,
+        values: values,
+        color: "#4572A7"
+      }
+    ];
+  }
+  nv.addGraph(function() {
+    var chart = nv.models.scatterChart()
+      .showDistX(true)
+      .showDistY(true)
+      .showLegend(false)
+      .forceX([0, 100]);
+    chart.tooltipContent(function(graph) {
+      return '<p>' + graph.point.class + '</p>';
+    });
+
+    chart.xAxis.axisLabel('Code Coverage (in percent)');
+    chart.yAxis.axisLabel('Cyclomatic Complexity');
+
+    d3.select('#classComplexity svg')
+      .datum(getComplexityData([[9.803921568627452,9,"<a href=\"Controllers\/AuthController.php.html#15\">App\\Http\\Controllers\\AuthController<\/a>"],[0,7,"<a href=\"Controllers\/AutorizacionController.php.html#8\">App\\Http\\Controllers\\AutorizacionController<\/a>"],[0,6,"<a href=\"Controllers\/ClienteController.php.html#8\">App\\Http\\Controllers\\ClienteController<\/a>"],[0,14,"<a href=\"Controllers\/CompraController.php.html#13\">App\\Http\\Controllers\\CompraController<\/a>"],[0,6,"<a href=\"Controllers\/ConfiguracionController.php.html#12\">App\\Http\\Controllers\\ConfiguracionController<\/a>"],[100,0,"<a href=\"Controllers\/Controller.php.html#5\">App\\Http\\Controllers\\Controller<\/a>"],[0,7,"<a href=\"Controllers\/DevolucionController.php.html#8\">App\\Http\\Controllers\\DevolucionController<\/a>"],[0,8,"<a href=\"Controllers\/ExistenciasController.php.html#9\">App\\Http\\Controllers\\ExistenciasController<\/a>"],[0,1,"<a href=\"Controllers\/HomeController.php.html#9\">App\\Http\\Controllers\\HomeController<\/a>"],[0,9,"<a href=\"Controllers\/InventarioController.php.html#11\">App\\Http\\Controllers\\InventarioController<\/a>"],[0,2,"<a href=\"Controllers\/MenuController.php.html#9\">App\\Http\\Controllers\\MenuController<\/a>"],[0,6,"<a href=\"Controllers\/ProductoController.php.html#9\">App\\Http\\Controllers\\ProductoController<\/a>"],[0,7,"<a href=\"Controllers\/ProveedorController.php.html#8\">App\\Http\\Controllers\\ProveedorController<\/a>"],[0,1,"<a href=\"Controllers\/RecuperarController.php.html#7\">App\\Http\\Controllers\\RecuperarController<\/a>"],[0,10,"<a href=\"Controllers\/ReportesController.php.html#10\">App\\Http\\Controllers\\ReportesController<\/a>"],[0,6,"<a href=\"Controllers\/VentaController.php.html#9\">App\\Http\\Controllers\\VentaController<\/a>"]], 'Class Complexity'))
+      .transition()
+      .duration(500)
+      .call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  nv.addGraph(function() {
+    var chart = nv.models.scatterChart()
+      .showDistX(true)
+      .showDistY(true)
+      .showLegend(false)
+      .forceX([0, 100]);
+    chart.tooltipContent(function(graph) {
+      return '<p>' + graph.point.class + '</p>';
+    });
+
+    chart.xAxis.axisLabel('Code Coverage (in percent)');
+    chart.yAxis.axisLabel('Method Complexity');
+
+    d3.select('#methodComplexity svg')
+      .datum(getComplexityData([[100,1,"<a href=\"Controllers\/AuthController.php.html#17\">App\\Http\\Controllers\\AuthController::showLogin<\/a>"],[36.36363636363637,3,"<a href=\"Controllers\/AuthController.php.html#22\">App\\Http\\Controllers\\AuthController::login<\/a>"],[0,1,"<a href=\"Controllers\/AuthController.php.html#41\">App\\Http\\Controllers\\AuthController::logout<\/a>"],[0,3,"<a href=\"Controllers\/AuthController.php.html#47\">App\\Http\\Controllers\\AuthController::sendTemporaryPassword<\/a>"],[0,1,"<a href=\"Controllers\/AuthController.php.html#91\">App\\Http\\Controllers\\AuthController::generateTempPassword<\/a>"],[0,1,"<a href=\"Controllers\/AutorizacionController.php.html#13\">App\\Http\\Controllers\\AutorizacionController::index<\/a>"],[0,1,"<a href=\"Controllers\/AutorizacionController.php.html#21\">App\\Http\\Controllers\\AutorizacionController::create<\/a>"],[0,1,"<a href=\"Controllers\/AutorizacionController.php.html#29\">App\\Http\\Controllers\\AutorizacionController::store<\/a>"],[0,1,"<a href=\"Controllers\/AutorizacionController.php.html#37\">App\\Http\\Controllers\\AutorizacionController::show<\/a>"],[0,1,"<a href=\"Controllers\/AutorizacionController.php.html#45\">App\\Http\\Controllers\\AutorizacionController::edit<\/a>"],[0,1,"<a href=\"Controllers\/AutorizacionController.php.html#53\">App\\Http\\Controllers\\AutorizacionController::update<\/a>"],[0,1,"<a href=\"Controllers\/AutorizacionController.php.html#61\">App\\Http\\Controllers\\AutorizacionController::destroy<\/a>"],[0,1,"<a href=\"Controllers\/ClienteController.php.html#11\">App\\Http\\Controllers\\ClienteController::index<\/a>"],[0,1,"<a href=\"Controllers\/ClienteController.php.html#18\">App\\Http\\Controllers\\ClienteController::create<\/a>"],[0,1,"<a href=\"Controllers\/ClienteController.php.html#24\">App\\Http\\Controllers\\ClienteController::store<\/a>"],[0,1,"<a href=\"Controllers\/ClienteController.php.html#40\">App\\Http\\Controllers\\ClienteController::edit<\/a>"],[0,1,"<a href=\"Controllers\/ClienteController.php.html#47\">App\\Http\\Controllers\\ClienteController::update<\/a>"],[0,1,"<a href=\"Controllers\/ClienteController.php.html#65\">App\\Http\\Controllers\\ClienteController::destroy<\/a>"],[0,1,"<a href=\"Controllers\/CompraController.php.html#15\">App\\Http\\Controllers\\CompraController::index<\/a>"],[0,1,"<a href=\"Controllers\/CompraController.php.html#24\">App\\Http\\Controllers\\CompraController::create<\/a>"],[0,9,"<a href=\"Controllers\/CompraController.php.html#32\">App\\Http\\Controllers\\CompraController::store<\/a>"],[0,1,"<a href=\"Controllers\/CompraController.php.html#100\">App\\Http\\Controllers\\CompraController::edit<\/a>"],[0,1,"<a href=\"Controllers\/CompraController.php.html#106\">App\\Http\\Controllers\\CompraController::update<\/a>"],[0,1,"<a href=\"Controllers\/CompraController.php.html#125\">App\\Http\\Controllers\\CompraController::destroy<\/a>"],[0,1,"<a href=\"Controllers\/ConfiguracionController.php.html#14\">App\\Http\\Controllers\\ConfiguracionController::index<\/a>"],[0,3,"<a href=\"Controllers\/ConfiguracionController.php.html#23\">App\\Http\\Controllers\\ConfiguracionController::update<\/a>"],[0,1,"<a href=\"Controllers\/ConfiguracionController.php.html#52\">App\\Http\\Controllers\\ConfiguracionController::store<\/a>"],[0,1,"<a href=\"Controllers\/ConfiguracionController.php.html#71\">App\\Http\\Controllers\\ConfiguracionController::destroy<\/a>"],[0,1,"<a href=\"Controllers\/DevolucionController.php.html#13\">App\\Http\\Controllers\\DevolucionController::index<\/a>"],[0,1,"<a href=\"Controllers\/DevolucionController.php.html#21\">App\\Http\\Controllers\\DevolucionController::create<\/a>"],[0,1,"<a href=\"Controllers\/DevolucionController.php.html#29\">App\\Http\\Controllers\\DevolucionController::store<\/a>"],[0,1,"<a href=\"Controllers\/DevolucionController.php.html#37\">App\\Http\\Controllers\\DevolucionController::show<\/a>"],[0,1,"<a href=\"Controllers\/DevolucionController.php.html#45\">App\\Http\\Controllers\\DevolucionController::edit<\/a>"],[0,1,"<a href=\"Controllers\/DevolucionController.php.html#53\">App\\Http\\Controllers\\DevolucionController::update<\/a>"],[0,1,"<a href=\"Controllers\/DevolucionController.php.html#61\">App\\Http\\Controllers\\DevolucionController::destroy<\/a>"],[0,1,"<a href=\"Controllers\/ExistenciasController.php.html#11\">App\\Http\\Controllers\\ExistenciasController::index<\/a>"],[0,1,"<a href=\"Controllers\/ExistenciasController.php.html#18\">App\\Http\\Controllers\\ExistenciasController::create<\/a>"],[0,2,"<a href=\"Controllers\/ExistenciasController.php.html#24\">App\\Http\\Controllers\\ExistenciasController::store<\/a>"],[0,1,"<a href=\"Controllers\/ExistenciasController.php.html#38\">App\\Http\\Controllers\\ExistenciasController::edit<\/a>"],[0,2,"<a href=\"Controllers\/ExistenciasController.php.html#45\">App\\Http\\Controllers\\ExistenciasController::update<\/a>"],[0,1,"<a href=\"Controllers\/ExistenciasController.php.html#60\">App\\Http\\Controllers\\ExistenciasController::destroy<\/a>"],[0,1,"<a href=\"Controllers\/HomeController.php.html#11\">App\\Http\\Controllers\\HomeController::index<\/a>"],[0,1,"<a href=\"Controllers\/InventarioController.php.html#13\">App\\Http\\Controllers\\InventarioController::index<\/a>"],[0,1,"<a href=\"Controllers\/InventarioController.php.html#39\">App\\Http\\Controllers\\InventarioController::create<\/a>"],[0,3,"<a href=\"Controllers\/InventarioController.php.html#45\">App\\Http\\Controllers\\InventarioController::store<\/a>"],[0,1,"<a href=\"Controllers\/InventarioController.php.html#71\">App\\Http\\Controllers\\InventarioController::show<\/a>"],[0,1,"<a href=\"Controllers\/InventarioController.php.html#77\">App\\Http\\Controllers\\InventarioController::edit<\/a>"],[0,1,"<a href=\"Controllers\/InventarioController.php.html#84\">App\\Http\\Controllers\\InventarioController::update<\/a>"],[0,1,"<a href=\"Controllers\/InventarioController.php.html#100\">App\\Http\\Controllers\\InventarioController::destroy<\/a>"],[0,2,"<a href=\"Controllers\/MenuController.php.html#11\">App\\Http\\Controllers\\MenuController::obtenerMenus<\/a>"],[0,1,"<a href=\"Controllers\/ProductoController.php.html#11\">App\\Http\\Controllers\\ProductoController::index<\/a>"],[0,1,"<a href=\"Controllers\/ProductoController.php.html#17\">App\\Http\\Controllers\\ProductoController::create<\/a>"],[0,1,"<a href=\"Controllers\/ProductoController.php.html#23\">App\\Http\\Controllers\\ProductoController::store<\/a>"],[0,1,"<a href=\"Controllers\/ProductoController.php.html#36\">App\\Http\\Controllers\\ProductoController::edit<\/a>"],[0,1,"<a href=\"Controllers\/ProductoController.php.html#43\">App\\Http\\Controllers\\ProductoController::update<\/a>"],[0,1,"<a href=\"Controllers\/ProductoController.php.html#58\">App\\Http\\Controllers\\ProductoController::destroy<\/a>"],[0,1,"<a href=\"Controllers\/ProveedorController.php.html#10\">App\\Http\\Controllers\\ProveedorController::index<\/a>"],[0,1,"<a href=\"Controllers\/ProveedorController.php.html#16\">App\\Http\\Controllers\\ProveedorController::create<\/a>"],[0,1,"<a href=\"Controllers\/ProveedorController.php.html#21\">App\\Http\\Controllers\\ProveedorController::store<\/a>"],[0,1,"<a href=\"Controllers\/ProveedorController.php.html#36\">App\\Http\\Controllers\\ProveedorController::show<\/a>"],[0,1,"<a href=\"Controllers\/ProveedorController.php.html#41\">App\\Http\\Controllers\\ProveedorController::edit<\/a>"],[0,1,"<a href=\"Controllers\/ProveedorController.php.html#46\">App\\Http\\Controllers\\ProveedorController::update<\/a>"],[0,1,"<a href=\"Controllers\/ProveedorController.php.html#61\">App\\Http\\Controllers\\ProveedorController::destroy<\/a>"],[0,1,"<a href=\"Controllers\/RecuperarController.php.html#9\">App\\Http\\Controllers\\RecuperarController::send<\/a>"],[0,1,"<a href=\"Controllers\/ReportesController.php.html#12\">App\\Http\\Controllers\\ReportesController::index<\/a>"],[0,9,"<a href=\"Controllers\/ReportesController.php.html#20\">App\\Http\\Controllers\\ReportesController::generar<\/a>"],[0,1,"<a href=\"Controllers\/VentaController.php.html#11\">App\\Http\\Controllers\\VentaController::index<\/a>"],[0,5,"<a href=\"Controllers\/VentaController.php.html#34\">App\\Http\\Controllers\\VentaController::store<\/a>"]], 'Method Complexity'))
+      .transition()
+      .duration(500)
+      .call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  function getComplexityData(data, label) {
+    var values = [];
+    $.each(data, function(key) {
+      var value = Math.round(data[key][0]*100) / 100;
+      values.push({
+        x: value,
+        y: data[key][1],
+        class: data[key][2],
+        size: 0.05,
+        shape: 'diamond'
+      });
+    });
+
+    return [
+      {
+        key: label,
+        values: values,
+        color: "#4572A7"
+      }
+    ];
+  }
+});
+  </script>
+ </body>
+</html>

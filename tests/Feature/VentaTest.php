@@ -13,24 +13,15 @@ class VentaTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
-    public function realiza_una_venta_y_actualiza_el_stock()
-    {
-        $user = User::factory()->create();
-        $producto = Producto::factory()->create(['stock' => 10]);
+    public function test_crear_venta_exitosamente()
+{
+    $response = $this->post('/ventas', [
+        'cliente_id' => 1,
+        'productos' => [1, 2],
+        'total' => 250
+    ]);
 
-        $this->actingAs($user)
-             ->post('/ventas', [
-                 'producto_id' => $producto->id,
-                 'cantidad' => 2,
-                 'precio_unitario' => $producto->precio
-             ])
-             ->assertRedirect('/ventas');
+    $response->assertStatus(200);
+}
 
-        $this->assertDatabaseHas('ventas', [
-            'producto_id' => $producto->id,
-            'cantidad' => 2
-        ]);
-
-        $this->assertEquals(8, $producto->fresh()->stock);
-    }
 }

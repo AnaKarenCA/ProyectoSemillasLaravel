@@ -94,6 +94,34 @@ LOCK TABLES `categorias_relacionadas` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `clientes`
+--
+
+DROP TABLE IF EXISTS `clientes`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `clientes` (
+  `id_cliente` int(11) NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(100) NOT NULL,
+  `telefono` varchar(20) DEFAULT NULL,
+  `correo` varchar(100) DEFAULT NULL,
+  `direccion` varchar(255) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id_cliente`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `clientes`
+--
+
+LOCK TABLES `clientes` WRITE;
+/*!40000 ALTER TABLE `clientes` DISABLE KEYS */;
+/*!40000 ALTER TABLE `clientes` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `compras`
 --
 
@@ -262,7 +290,7 @@ CREATE TABLE `menuasignado` (
   KEY `fk_menuAsignado_menu` (`id_menu`),
   CONSTRAINT `fk_menuAsignado_menu` FOREIGN KEY (`id_menu`) REFERENCES `menus` (`id_menu`),
   CONSTRAINT `fk_menuAsignado_rol` FOREIGN KEY (`id_rol`) REFERENCES `rol` (`id_rol`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -271,7 +299,7 @@ CREATE TABLE `menuasignado` (
 
 LOCK TABLES `menuasignado` WRITE;
 /*!40000 ALTER TABLE `menuasignado` DISABLE KEYS */;
-INSERT INTO `menuasignado` VALUES (1,1,1),(2,1,2),(3,1,3),(4,1,4),(5,1,5),(6,1,6),(7,2,1),(8,2,2),(9,2,4),(10,2,5),(11,2,6),(12,1,7),(13,2,7),(15,1,8);
+INSERT INTO `menuasignado` VALUES (1,1,1),(2,1,2),(3,1,3),(4,1,4),(5,1,5),(6,1,6),(7,2,1),(8,2,2),(9,2,4),(10,2,5),(11,2,6),(12,1,7),(13,2,7),(15,1,8),(17,1,10),(18,1,9);
 /*!40000 ALTER TABLE `menuasignado` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -552,4 +580,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-10-30 20:15:14
+-- Dump completed on 2025-10-31  0:07:25

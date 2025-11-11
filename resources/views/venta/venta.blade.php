@@ -4,22 +4,36 @@
 
 @section('content')
 <link rel="stylesheet" href="{{ asset('css/venta.css') }}">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
-<div class="container-fluid p-0"> <!-- Para que abarque todo -->
-    <section class="hero-section py-4">
-        <h1>Punto de Venta</h1>
+<div class="container-fluid p-0">
+    <section class="hero-section text-center py-4">
+        <i class="material-icons" style="font-size: 36px; vertical-align: middle;">point_of_sale</i>
+        <h1 class="d-inline align-middle ms-2">Punto de Venta</h1>
         <p>Usuario: {{ $usuario->nombre ?? 'Usuario Desconocido' }}</p>
-
-  
     </section>
 
     <div class="container mt-4" id="venta-module">
-        <div class="info d-flex justify-content-between mb-3">
-            <div>Fecha: <span id="date-field"></span></div>
-            <div>Hora: <span id="time-field"></span></div>
+        <div class="d-flex justify-content-between mb-3 align-items-center flex-wrap">
+            <div>
+                <button class="btn btn-maroon me-2" id="btn-clientes">
+                    <i class="material-icons align-middle">group</i> Clientes
+                </button>
+                <button class="btn btn-maroon me-2" id="btn-descuento">
+                    <i class="material-icons align-middle">sell</i> Descuento
+                </button>
+                <button class="btn btn-secondary me-2" id="btn-devolucion">
+                    <i class="material-icons align-middle">undo</i> Devolución
+                </button>
+            </div>
+            <div>
+                Fecha: <span id="date-field"></span> |
+                Hora: <span id="time-field"></span>
+            </div>
         </div>
 
-        <div class="search-section d-flex flex-wrap gap-2 mb-3">
+        <div class="search-section d-flex flex-wrap gap-2 mb-3 align-items-center">
+            <input type="text" id="codigo-barra-input" class="form-control w-auto" placeholder="Escanea código de barras o QR...">
             <input type="text" id="product-search" class="form-control w-auto" placeholder="Buscar producto...">
             <select id="category-filter" class="form-select w-auto">
                 <option value="">Todas las categorías</option>
@@ -39,6 +53,7 @@
         <table id="available-products-table" class="table table-striped table-bordered">
             <thead class="table-dark">
                 <tr>
+                    <th>Código</th>
                     <th>Producto</th>
                     <th>Precio</th>
                     <th>Stock</th>
@@ -48,7 +63,7 @@
             <tbody></tbody>
         </table>
 
-        <h3>Venta</h3>
+        <h3>Venta Actual</h3>
         <table id="sale-table" class="table table-striped table-bordered">
             <thead class="table-dark">
                 <tr>
@@ -69,15 +84,49 @@
             </div>
             <div class="mb-2">Total cambio a devolver: $<span id="change-total">0.00</span></div>
         </div>
-        <button class="btn btn-success mt-3" id="realizar-venta-btn">Realizar Venta</button>
-        <p id="mensajeVenta" class="hidden"></p>
+
+        <button class="btn btn-success mt-3" id="realizar-venta-btn">
+            <i class="material-icons align-middle">check_circle</i> Realizar Venta
+        </button>
+
+        <p id="mensajeVenta" class="hidden mt-3"></p>
     </div>
 </div>
 
-{{-- Pasamos los productos a JS --}}
+{{-- Datos a JS --}}
 <script>
     window.productosDisponibles = @json($productos);
 </script>
 
 <script src="{{ asset('js/venta.js') }}"></script>
+
+<style>
+    .hero-section {
+        background-color: #800000;
+        color: white;
+        width: 100%;
+        border-radius: 0;
+    }
+
+    .btn-maroon {
+        background-color: #800000;
+        border-color: #800000;
+        color: #fff;
+    }
+
+    .btn-maroon:hover {
+        background-color: #a00000;
+        border-color: #a00000;
+        color: #fff;
+    }
+
+    .table-dark {
+        background-color: #800000 !important;
+        color: #fff;
+    }
+
+    #codigo-barra-input {
+        border: 2px solid #800000;
+    }
+</style>
 @endsection

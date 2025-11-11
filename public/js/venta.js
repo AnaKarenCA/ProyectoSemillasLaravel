@@ -17,13 +17,14 @@ document.addEventListener("DOMContentLoaded", () => {
     const totalField = document.getElementById("purchase-total");
     const cambioInput = document.getElementById("cambio-input");
     const changeTotal = document.getElementById("change-total");
+    const searchInput = document.getElementById("product-search");
 
     let carrito = [];
 
     // ==== 3. Renderizar productos disponibles ====
     function renderProductos(list = productos) {
         tableBody.innerHTML = "";
-        const limitados = list.slice(0, 5); // Limitar a 5 resultados
+        const limitados = list.slice(0, 3); // Limitar a 5 resultados
         limitados.forEach((prod) => {
             const tr = document.createElement("tr");
             tr.innerHTML = `
@@ -32,7 +33,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 <td>${prod.stock}</td>
                 <td>
                     <button class="btn btn-sm btn-success add-btn" data-id="${prod.id_producto}" ${prod.stock <= 0 ? 'disabled' : ''}>
-                        Agregar
+                        <span class="material-symbols-outlined">add_shopping_cart</span>
                     </button>
                 </td>
             `;
@@ -41,8 +42,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     renderProductos();
 
-    // ==== 4. Filtrar productos ====
-    const searchInput = document.getElementById("product-search");
+    // ==== 4. Filtros ====
     const categoryFilter = document.getElementById("category-filter");
     const priceFilter = document.getElementById("price-filter");
     const priceManual = document.getElementById("price-manual");
@@ -76,37 +76,41 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    // ==== 5. Manejar carrito ====
+    // ==== 5. Escaneo de código de barras o QR ====
+    const barcodeInput = document.createElement("input");
+    barcodeInput.type = "text";
+    barcodeInput.id = "barcode-input";
+    barcodeInput.placeholder = "Escanea código o QR aquí...";
+    barcodeInput.classList.add("form-control", "mt-2", "w-50");
+    document.querySelector(".search-section").appendChild(barcodeInput);
+
+    let scanTimeout;
+    barcodeInput.addEventListener("input", (e) => {
+        clearTimeout(scanTimeout);
+        scanTimeout = setTimeout(() => {
+            const code = e.target.value.trim();
+            if (code.length > 0) buscarPorCodigo(code);
+            e.target.value = "";
+        }, 400); // espera breve por si el lector manda rápido los caracteres
+    });
+
+    function buscarPorCodigo(code) {
+        const producto = productos.find(p =>
+            p.codigo === code || p.id_producto.toString() === code
+        );
+
+        if (producto) {
+            agregarProducto(producto.id_producto);
+        } else {
+            alert("⚠️ Producto no encontrado para el código: " + code);
+        }
+    }
+
+    // ==== 6. Agregar/Quitar productos ====
     document.addEventListener("click", (e) => {
-        if (e.target.classList.contains("add-btn")) {
-            const id = e.target.dataset.id;
-            const producto = productos.find((p) => p.id_producto == id);
-            if (!producto) return;
-
-            let item = carrito.find((i) => i.id == id);
-
-            if (item) {
-                if (item.cantidad < producto.stock) {
-                    item.cantidad++;
-                } else {
-                    alert('No puedes agregar más unidades, no hay suficiente stock.');
-                    return;
-                }
-            } else {
-                if (producto.stock <= 0) {
-                    alert('Este producto no tiene stock disponible.');
-                    return;
-                }
-                carrito.push({
-                    id: producto.id_producto,
-                    nombre: producto.nombre,
-                    precio: parseFloat(producto.precio),
-                    cantidad: 1,
-                    stock: producto.stock
-                });
-            }
-
-            renderCarrito();
+        if (e.target.closest(".add-btn")) {
+            const id = e.target.closest(".add-btn").dataset.id;
+            agregarProducto(id);
         }
 
         if (e.target.classList.contains("remove-btn")) {
@@ -116,6 +120,37 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
+    function agregarProducto(id) {
+        const producto = productos.find((p) => p.id_producto == id);
+        if (!producto) return;
+
+        let item = carrito.find((i) => i.id == id);
+
+        if (item) {
+            if (item.cantidad < producto.stock) {
+                item.cantidad++;
+            } else {
+                alert('No puedes agregar más unidades, no hay suficiente stock.');
+                return;
+            }
+        } else {
+            if (producto.stock <= 0) {
+                alert('Este producto no tiene stock disponible.');
+                return;
+            }
+            carrito.push({
+                id: producto.id_producto,
+                nombre: producto.nombre,
+                precio: parseFloat(producto.precio),
+                cantidad: 1,
+                stock: producto.stock
+            });
+        }
+
+        renderCarrito();
+    }
+
+    // ==== 7. Renderizar carrito ====
     function renderCarrito() {
         saleBody.innerHTML = "";
         let total = 0;
@@ -132,12 +167,16 @@ document.addEventListener("DOMContentLoaded", () => {
                            min="1" 
                            max="${item.stock}" 
                            value="${item.cantidad}" 
-                           class="cantidad-input" 
+                           class="cantidad-input form-control form-control-sm" 
                            data-id="${item.id}">
                 </td>
                 <td>$${item.precio.toFixed(2)}</td>
                 <td>$${subtotal.toFixed(2)}</td>
-                <td><button class="btn btn-sm btn-danger remove-btn" data-id="${item.id}">Quitar</button></td>
+                <td>
+                    <button class="btn btn-sm btn-danger remove-btn" data-id="${item.id}">
+                        <span class="material-symbols-outlined">delete</span>
+                    </button>
+                </td>
             `;
             saleBody.appendChild(tr);
         });
@@ -146,7 +185,7 @@ document.addEventListener("DOMContentLoaded", () => {
         calcularCambio();
     }
 
-    // Actualizar cantidades manualmente
+    // ==== 8. Actualizar cantidades ====
     document.addEventListener("input", (e) => {
         if (e.target.classList.contains("cantidad-input")) {
             const id = e.target.dataset.id;
@@ -161,7 +200,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    // ==== 6. Calcular cambio ====
+    // ==== 9. Calcular cambio ====
     cambioInput.addEventListener("keyup", calcularCambio);
 
     function calcularCambio() {
@@ -171,7 +210,7 @@ document.addEventListener("DOMContentLoaded", () => {
         changeTotal.textContent = cambio >= 0 ? cambio.toFixed(2) : "0.00";
     }
 
-    // ==== 7. Guardar venta ====
+    // ==== 10. Guardar venta ====
     document.getElementById("realizar-venta-btn").addEventListener("click", () => {
         if (carrito.length === 0) {
             alert("No hay productos en la venta");
@@ -201,13 +240,12 @@ document.addEventListener("DOMContentLoaded", () => {
             if (res.success) {
                 alert(res.message);
 
-                // Actualiza stock local según lo enviado por backend
+                // Actualiza stock local
                 res.productos.forEach(item => {
                     let prod = productos.find(p => p.id_producto === item.id_producto);
                     if (prod) prod.stock = item.stock;
                 });
 
-                // Limpiar carrito y actualizar tablas
                 carrito = [];
                 renderCarrito();
                 renderProductos();
@@ -215,7 +253,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 alert(res.message);
             }
         })
-
         .catch((err) => console.error(err));
     });
 });

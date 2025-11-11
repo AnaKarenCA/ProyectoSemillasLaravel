@@ -12,7 +12,7 @@
 </div>
 <div class="mb-3">
     <label>Correo Electrónico:</label>
-    <input type="email" name="correo_electronico" class="form-control" value="{{ old('correo_electronico', $cliente->correo_electronico ?? '') }}" required>
+    <input type="email" name="correo" class="form-control" value="{{ old('correo', $cliente->correo ?? '') }}" required>
 </div>
 <div class="mb-3">
     <label>Teléfono:</label>
@@ -22,6 +22,11 @@
     <label>Dirección:</label>
     <input type="text" name="direccion" class="form-control" value="{{ old('direccion', $cliente->direccion ?? '') }}">
 </div>
+<div class="mb-3">
+    <label>Descuento (%):</label>
+    <input type="number" name="descuento" class="form-control" min="0" max="100" step="0.01" value="{{ old('descuento', $cliente->descuento ?? 0) }}">
+</div>
+
 @if(isset($cliente))
 <div class="mb-3">
     <label>Estado:</label>

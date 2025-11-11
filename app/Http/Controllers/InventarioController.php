@@ -6,13 +6,34 @@ use App\Models\Inventario;
 use App\Models\Producto;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class InventarioController extends Controller
 {
     public function index()
     {
+        // Movimientos individuales
         $inventarios = Inventario::with('producto')->latest()->paginate(10);
-        return view('inventarios.index', compact('inventarios'));
+
+        // Datos para análisis y toma de decisiones
+        $totalProductos = Producto::count();
+        $entradasMes = Inventario::where('tipo_movimiento', 'entrada')
+            ->whereMonth('fecha_movimiento', Carbon::now()->month)
+            ->sum('cantidad');
+
+        $salidasMes = Inventario::where('tipo_movimiento', 'salida')
+            ->whereMonth('fecha_movimiento', Carbon::now()->month)
+            ->sum('cantidad');
+
+        $productosCriticos = Producto::where('stock', '<', 10)->get(); // menos de 10 unidades
+
+        return view('inventarios.index', compact(
+            'inventarios',
+            'totalProductos',
+            'entradasMes',
+            'salidasMes',
+            'productosCriticos'
+        ));
     }
 
     public function create()
@@ -34,7 +55,7 @@ class InventarioController extends Controller
         DB::transaction(function () use ($request) {
             $inventario = Inventario::create($request->all());
 
-            // Ajuste automático del stock del producto
+            // Ajuste automático del stock
             $producto = $inventario->producto;
             if ($inventario->tipo_movimiento === 'entrada') {
                 $producto->stock += $inventario->cantidad;

@@ -11,6 +11,8 @@ use App\Http\Controllers\ReportesController;
 
 use App\Http\Controllers\InventarioController;
 
+use App\Http\Controllers\ConfiguracionController;
+
 Route::resource('inventarios', InventarioController::class);
 Route::resource('inventarios', App\Http\Controllers\InventarioController::class);
 
@@ -55,6 +57,13 @@ Route::get('/reportes', [ReportesController::class, 'index'])->name('reportes.in
 Route::post('/reportes/generar', [ReportesController::class, 'generar'])->name('reportes.generar');
 
 Route::resource('existencias', ExistenciasController::class);
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/configuracion', [ConfiguracionController::class, 'index'])->name('configuracion.index');
+    Route::post('/configuracion/{id}', [ConfiguracionController::class, 'update'])->name('configuracion.update');
+    Route::post('/configuracion/nuevo', [ConfiguracionController::class, 'store'])->name('configuracion.store');
+    Route::delete('/configuracion/{id}', [ConfiguracionController::class, 'destroy'])->name('configuracion.destroy');
+});
 
 });
 
