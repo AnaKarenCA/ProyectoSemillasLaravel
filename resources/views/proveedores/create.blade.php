@@ -7,6 +7,14 @@
     <div class="hero-section mb-3">
         <h2>{{ isset($proveedor) ? 'Editar Proveedor' : 'Agregar Proveedor' }}</h2>
     </div>
+    @if ($errors->any())
+    <div class="alert alert-danger">
+        <strong>Error:</strong><br>
+        @foreach ($errors->all() as $error)
+            • {{ $error }} <br>
+        @endforeach
+    </div>
+@endif
 
     <form action="{{ isset($proveedor) ? route('proveedores.update', $proveedor->id_proveedor) : route('proveedores.store') }}" method="POST">
         @csrf

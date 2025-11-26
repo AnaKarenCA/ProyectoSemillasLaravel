@@ -2,132 +2,85 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use App\Models\Compra;
 use App\Models\DetalleCompra;
-use App\Models\Proveedor;
 use App\Models\Producto;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use App\Models\ProductoUnidad;
 use Illuminate\Support\Facades\DB;
 
 class CompraController extends Controller
 {
     public function index()
-    {
-        $compras = Compra::with('proveedor')
-            ->orderBy('fecha', 'desc')
-            ->get();
+{
+    $compras = Compra::with('proveedor')->orderBy('id_compra', 'desc')->get();
+    $productos = Producto::with('unidades')->get();
 
-        return view('compras.index', compact('compras'));
-    }
+    return view('compras.index', compact('compras', 'productos'));
+}
 
-    public function create()
-    {
-        $proveedores = Proveedor::where('estado', 'activo')->get();
-        $productos = Producto::where('estado', 'activo')->get();
-
-        return view('compras.create', compact('proveedores', 'productos'));
-    }
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'id_proveedor'   => 'required|exists:proveedores,id_proveedor',
-            'folio_factura'  => 'nullable|string|max:50',
-            'forma_pago'     => 'required|in:efectivo,transferencia,crédito',
-            'estado_pago'    => 'required|in:pagada,pendiente',
-            'fecha'          => 'required|date',
-            'total'          => 'required|numeric|min:0',
-            'descripcion'    => 'nullable|string|max:255',
-            'observaciones'  => 'nullable|string',
-            'productos'      => 'required|array',
-        ]);
+        DB::beginTransaction();
 
         try {
-            DB::beginTransaction();
 
-            // Crear compra principal
             $compra = Compra::create([
-                'id_proveedor'  => $request->id_proveedor,
-                'id_usuario'    => Auth::user()->id_usuario ?? 1, // Fallback si no hay sesión
-                'folio_factura' => $request->folio_factura,
-                'forma_pago'    => $request->forma_pago,
-                'estado_pago'   => $request->estado_pago,
-                'fecha'         => $request->fecha,
-                'total'         => $request->total,
-                'descripcion'   => $request->descripcion,
-                'observaciones' => $request->observaciones,
-                'estado'        => 'activo',
+                'fecha' => now(),
+                'total' => 0
             ]);
 
-            // Guardar detalle de productos
-            if ($request->productos) {
-                foreach ($request->productos as $detalle) {
-                    if (
-                        !empty($detalle['id_producto']) &&
-                        $detalle['id_producto'] > 0 &&
-                        !empty($detalle['cantidad']) &&
-                        $detalle['cantidad'] > 0
-                    ) {
-                        DetalleCompra::create([
-                            'id_compra'   => $compra->id_compra,
-                            'id_producto' => $detalle['id_producto'],
-                            'cantidad'    => $detalle['cantidad'],
-                            'costo'       => $detalle['costo'],
-                        ]);
+            $totalCompra = 0;
 
-                        // Actualizar stock y costo
-                        $producto = Producto::find($detalle['id_producto']);
-                        if ($producto) {
-                            $producto->stock += $detalle['cantidad'];
-                            $producto->costo = $detalle['costo'];
-                            $producto->save();
-                        }
-                    }
+            foreach ($request->productos as $item) {
+
+                $unidad = ProductoUnidad::find($item['id_producto_unidad']);
+                $producto = Producto::find($item['id_producto']);
+
+                if (!$unidad || !$producto) {
+                    continue;
                 }
+
+                // Conversión proporcional a kilos
+                $cantidadKg = $item['cantidad'] * $unidad->factor_conversion;
+
+                // Precio proporcional según unidad comprada
+                $precio = $unidad->precio_unitario;
+
+                // Subtotal
+                $subtotal = $item['cantidad'] * $precio;
+
+                // Guardar detalle de compra
+                DetalleCompra::create([
+                    'id_compra' => $compra->id,
+                    'id_producto' => $producto->id_producto,
+                    'id_producto_unidad' => $unidad->id_producto_unidad,
+                    'cantidad' => $item['cantidad'],
+                    'cantidad_convertida_kg' => $cantidadKg,
+                    'precio' => $precio,
+                    'subtotal' => $subtotal,
+                ]);
+
+                // Actualizar inventario sumando en kilos base
+                $producto->existencia += $cantidadKg;
+                $producto->save();
+
+                $totalCompra += $subtotal;
             }
+
+            // Actualizar total de la compra
+            $compra->total = $totalCompra;
+            $compra->save();
 
             DB::commit();
 
-            return redirect()->route('compras.index')
-                ->with('success', 'Compra registrada exitosamente.');
+            return redirect()->route('compras.index')->with('ok', 'Compra registrada correctamente');
+
         } catch (\Exception $e) {
             DB::rollBack();
-            return back()->withErrors(['error' => 'Error al guardar la compra: ' . $e->getMessage()]);
+
+            return back()->with('error', 'Error en la compra: ' . $e->getMessage());
         }
-    }
-
-    public function edit(Compra $compra)
-    {
-        $proveedores = Proveedor::where('estado', 'activo')->get();
-        return view('compras.edit', compact('compra', 'proveedores'));
-    }
-
-    public function update(Request $request, Compra $compra)
-    {
-        $validated = $request->validate([
-            'id_proveedor'   => 'required|exists:proveedores,id_proveedor',
-            'folio_factura'  => 'nullable|string|max:50',
-            'forma_pago'     => 'required|in:efectivo,transferencia,crédito',
-            'estado_pago'    => 'required|in:pagada,pendiente',
-            'fecha'          => 'required|date',
-            'total'          => 'required|numeric|min:0',
-            'descripcion'    => 'nullable|string|max:255',
-            'observaciones'  => 'nullable|string',
-        ]);
-
-        $compra->update($validated);
-
-        return redirect()->route('compras.index')
-            ->with('success', 'Compra actualizada correctamente.');
-    }
-
-    public function destroy(Compra $compra)
-    {
-        $compra->estado = 'inactivo';
-        $compra->save();
-
-        return redirect()->route('compras.index')
-            ->with('success', 'Compra eliminada correctamente.');
     }
 }

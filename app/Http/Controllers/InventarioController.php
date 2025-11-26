@@ -104,4 +104,11 @@ class InventarioController extends Controller
 
         return redirect()->route('inventarios.index')->with('success', 'Registro eliminado.');
     }
+    public function getUnidades($id_producto)
+{
+    return response()->json(
+        \App\Models\ProductoUnidad::where('id_producto', $id_producto)->get()
+    );
+}
+
 }

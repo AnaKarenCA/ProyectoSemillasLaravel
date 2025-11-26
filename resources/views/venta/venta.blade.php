@@ -14,17 +14,15 @@
     </section>
 
     <div class="container mt-4" id="venta-module">
+
+        {{-- ------------------- BARRA SUPERIOR ------------------- --}}
         <div class="d-flex justify-content-between mb-3 align-items-center flex-wrap">
             <div>
-                <button class="btn btn-maroon me-2" id="btn-clientes">
-                    <i class="material-icons align-middle">group</i> Clientes
-                </button>
+                
                 <button class="btn btn-maroon me-2" id="btn-descuento">
                     <i class="material-icons align-middle">sell</i> Descuento
                 </button>
-                <button class="btn btn-secondary me-2" id="btn-devolucion">
-                    <i class="material-icons align-middle">undo</i> Devolución
-                </button>
+                
             </div>
             <div>
                 Fecha: <span id="date-field"></span> |
@@ -32,15 +30,18 @@
             </div>
         </div>
 
+        {{-- ------------------- BUSCADOR ------------------- --}}
         <div class="search-section d-flex flex-wrap gap-2 mb-3 align-items-center">
             <input type="text" id="codigo-barra-input" class="form-control w-auto" placeholder="Escanea código de barras o QR...">
             <input type="text" id="product-search" class="form-control w-auto" placeholder="Buscar producto...">
+
             <select id="category-filter" class="form-select w-auto">
                 <option value="">Todas las categorías</option>
                 @foreach($categorias as $cat)
                     <option value="{{ $cat->id_categoria }}">{{ $cat->nombre }}</option>
                 @endforeach
             </select>
+
             <div class="slider-container d-flex align-items-center gap-2">
                 <label for="price-filter" class="form-label mb-0">Precio máx:</label>
                 <input type="range" id="price-filter" min="0" max="{{ $maxPrecio }}" step="0.01" value="{{ $maxPrecio }}">
@@ -49,27 +50,31 @@
             </div>
         </div>
 
+        {{-- ------------------- TABLA PRODUCTOS ------------------- --}}
         <h3>Productos Disponibles</h3>
         <table id="available-products-table" class="table table-striped table-bordered">
             <thead class="table-dark">
                 <tr>
                     <th>Código</th>
                     <th>Producto</th>
-                    <th>Precio</th>
-                    <th>Stock</th>
+                    <th>Unidad</th> {{-- NUEVO --}}
+                    <th>Precio</th> {{-- NUEVO --}}
+                    <th>Stock Base (kg)</th>
                     <th>Acción</th>
                 </tr>
             </thead>
             <tbody></tbody>
         </table>
 
+        {{-- ------------------- TABLA DE VENTA ACTUAL ------------------- --}}
         <h3>Venta Actual</h3>
         <table id="sale-table" class="table table-striped table-bordered">
             <thead class="table-dark">
                 <tr>
                     <th>Producto</th>
                     <th>Cantidad</th>
-                    <th>Precio</th>
+                    <th>Unidad</th>
+                    <th>Precio unit.</th>
                     <th>Total</th>
                     <th>Acciones</th>
                 </tr>
@@ -77,12 +82,18 @@
             <tbody></tbody>
         </table>
 
+        {{-- ------------------- TOTALES ------------------- --}}
         <div class="totals mt-3">
             <div class="mb-2">Total de la compra: $<span id="purchase-total">0.00</span></div>
+
             <div class="mb-2">
-                Pago recibido: <input type="text" id="cambio-input" class="form-control d-inline-block w-auto" placeholder="0.00">
+                Pago recibido: 
+                <input type="text" id="cambio-input" class="form-control d-inline-block w-auto" placeholder="0.00">
             </div>
-            <div class="mb-2">Total cambio a devolver: $<span id="change-total">0.00</span></div>
+
+            <div class="mb-2">
+                Total cambio a devolver: $<span id="change-total">0.00</span>
+            </div>
         </div>
 
         <button class="btn btn-success mt-3" id="realizar-venta-btn">
@@ -90,12 +101,13 @@
         </button>
 
         <p id="mensajeVenta" class="hidden mt-3"></p>
-    </div>
+
+    </div> {{-- FIN MODULE --}}
 </div>
 
-{{-- Datos a JS --}}
+{{-- ------------------- PASAMOS PRODUCTOS A JS ------------------- --}}
 <script>
-    window.productosDisponibles = @json($productos);
+    window.productosDisponibles = @json($productos); 
 </script>
 
 <script src="{{ asset('js/venta.js') }}"></script>
@@ -129,4 +141,5 @@
         border: 2px solid #800000;
     }
 </style>
+
 @endsection

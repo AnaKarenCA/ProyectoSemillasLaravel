@@ -21,17 +21,19 @@ class ProveedorController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'nombre' => 'required|string|max:100',
-            'telefono' => 'nullable|string|max:20',
-            'direccion' => 'nullable|string',
-            'correo' => 'nullable|email|max:100',
-            'estado' => 'required|in:Activo,Inactivo',
+            'nombre' => 'required|string|max:100|unique:proveedores,nombre',
+            'correo' => 'nullable|email|max:100|unique:proveedores,correo',
+        ], [
+            'nombre.unique' => '⚠️ El proveedor ya existe. Intenta con otro nombre.',
+            'correo.unique' => '⚠️ Este correo ya está registrado.',
         ]);
-
+    
         Proveedor::create($validated);
-
+    
         return redirect()->route('proveedores.index')->with('success', 'Proveedor creado exitosamente.');
     }
+    
+
 
     public function show(Proveedor $proveedor)
     {
@@ -44,19 +46,20 @@ class ProveedorController extends Controller
     }
 
     public function update(Request $request, Proveedor $proveedor)
-    {
-        $validated = $request->validate([
-            'nombre' => 'required|string|max:100',
-            'telefono' => 'nullable|string|max:20',
-            'direccion' => 'nullable|string',
-            'correo' => 'nullable|email|max:100',
-            'estado' => 'required|in:Activo,Inactivo',
-        ]);
+{
+    $validated = $request->validate([
+        'nombre' => 'required|string|max:100|unique:proveedores,nombre,' . $proveedor->id_proveedor . ',id_proveedor',
+        'telefono' => 'nullable|string|max:20',
+        'direccion' => 'nullable|string',
+        'correo' => 'nullable|email|max:100|unique:proveedores,correo,' . $proveedor->id_proveedor . ',id_proveedor',
+        'estado' => 'required|in:Activo,Inactivo',
+    ]);
 
-        $proveedor->update($validated);
+    $proveedor->update($validated);
 
-        return redirect()->route('proveedores.index')->with('success', 'Proveedor actualizado exitosamente.');
-    }
+    return redirect()->route('proveedores.index')->with('success', 'Proveedor actualizado exitosamente.');
+}
+
 
     public function destroy(Proveedor $proveedor)
     {

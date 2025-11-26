@@ -4,109 +4,80 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Auth;
+use App\Models\Producto;
+use App\Models\ProductoUnidad;
+use App\Models\Venta;
+use App\Models\VentaDetalle;
+use App\Models\Categoria;
+use App\Models\Usuario;
 
 class VentaController extends Controller
 {
     public function index()
     {
-        $usuario = Auth::user();
+        // Usuario autenticado
+        $usuario = auth()->user();
 
-        $categorias = DB::table('categorias')
-            ->select('id_categoria', 'nombre')
-            ->get();
+        // Productos y unidades
+        $productos = Producto::with('unidades')->get();
 
-        $productos = DB::table('productos')
-            ->select('id_producto', 'codigo', 'nombre', 'precio', 'stock', 'categoria_id', 'estado')
-            ->where('estado', 'activo')
-            ->get()
-            ->map(function($p) {
-                return (array) $p;
-            })
-            ->toArray();
+        // Categorías
+        $categorias = Categoria::all();
 
+        // Precio máximo para el slider (CORREGIDO)
+        $maxPrecio = ProductoUnidad::max('precio');
 
-        $maxPrecio = collect($productos)->max('precio') ?? 0;
-
-        return view('venta.venta', compact('usuario', 'categorias', 'productos', 'maxPrecio'));
+        return view('venta.venta', compact('productos', 'usuario', 'categorias', 'maxPrecio'));
     }
 
     public function store(Request $request)
     {
-        $data = $request->validate([
-            'venta_data' => 'required|array|min:1',
-            'venta_data.*.id' => 'required|exists:productos,id_producto',
-            'venta_data.*.cantidad' => 'required|integer|min:1',
-            'venta_data.*.precio' => 'required|numeric|min:0',
-            'total' => 'required|numeric|min:0.01',
-        ]);
-
-        $usuario_id = Auth::id();
-
         DB::beginTransaction();
+
         try {
-            $venta_id = DB::table('ventas')->insertGetId([
-                'id_usuario' => $usuario_id,
-                'total' => $data['total'],
-                'fecha' => now(),
+            // 1. Crear venta
+            $venta = Venta::create([
+                'id_usuario' => auth()->user()->id_usuario,
+                'total'      => $request->total,
             ]);
 
-            $productosActualizados = [];
+            // 2. Recorrer productos recibidos
+            foreach ($request->productos as $item) {
 
-            foreach ($data['venta_data'] as $item) {
+                $unidad = ProductoUnidad::find($item['id_producto_unidad']);
 
-                // Bloquear producto
-                $producto = DB::table('productos')
-                    ->where('id_producto', $item['id'])
-                    ->lockForUpdate()
-                    ->first();
+                // Cálculo proporcional en KG
+                $cantidadKg = $item['cantidad'] * $unidad->factor_conversion;
 
-                if (!$producto) {
-                    throw new \Exception("Producto no encontrado: {$item['id']}");
-                }
+                $precio = $unidad->precio;
+                $subtotal = $item['cantidad'] * $precio;
 
-                // Validar stock
-                if ($producto->stock < $item['cantidad']) {
-                    throw new \Exception("No hay suficiente stock disponible para el producto {$producto->nombre}");
-                }
-
-                // Insertar detalle de venta
-                DB::table('detalle_ventas')->insert([
-                    'id_venta' => $venta_id,
-                    'id_producto' => $item['id'],
-                    'cantidad' => $item['cantidad'],
-                    'precio' => $item['precio'],
+                // 👉 Insertar detalle
+                VentaDetalle::create([
+                    'id_venta'            => $venta->id_venta,
+                    'id_producto'         => $item['id_producto'],
+                    'id_producto_unidad'  => $item['id_producto_unidad'],
+                    'cantidad'            => $item['cantidad'],
+                    'precio'              => $precio,
+                    'subtotal'            => $subtotal,
                 ]);
 
-                // Actualizar stock **sin permitir negativos**
-                DB::table('productos')
-                    ->where('id_producto', $item['id'])
-                    ->where('stock', '>=', $item['cantidad'])
-                    ->decrement('stock', $item['cantidad']);
-
-                // Obtener nuevo stock
-                $nuevoStock = DB::table('productos')
-                    ->where('id_producto', $item['id'])
-                    ->value('stock');
-
-                $productosActualizados[] = [
-                    'id_producto' => $item['id'],
-                    'stock' => $nuevoStock,
-                ];
+                // 👉 Descontar inventario
+                $producto = Producto::find($item['id_producto']);
+                $producto->existencia -= $cantidadKg;
+                $producto->save();
             }
 
             DB::commit();
+            return response()->json(['success' => true, 'message' => 'Venta realizada correctamente']);
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Venta realizada con éxito',
-                'productos' => $productosActualizados,
-            ]);
         } catch (\Exception $e) {
-            DB::rollback();
+
+            DB::rollBack();
             return response()->json([
                 'success' => false,
-                'message' => 'Error al procesar la venta: ' . $e->getMessage(),
+                'message' => 'Error al guardar la venta',
+                'error'   => $e->getMessage()
             ]);
         }
     }
