@@ -1,130 +1,222 @@
 @extends('layouts.app')
 
-@section('title', 'Existencias')
+@section('title', 'Catálogo de productos')
 
 @section('content')
-<link rel="stylesheet" href="{{ asset('css/existencias.css') }}">
-<script src="{{ asset('js/existencias.js') }}"></script>
 
-{{-- Sección encabezado ancho completo --}}
+<style>
+    .hero-existencias {
+        width: 100%;
+        background-color: #800000;
+        padding: 20px 0;
+        text-align: center;
+        color: white;
+        margin-bottom: 20px;
+        font-size: 26px;
+        font-weight: bold;
+    }
+
+    .btn-main {
+        background-color: #800000;
+        color: white;
+        border: none;
+    }
+
+    .btn-main:hover {
+        background-color: #a00000;
+        color: white;
+    }
+
+    .stock-ok { color: green; font-weight: bold; }
+    .stock-low { color: orange; font-weight: bold; }
+    .stock-zero { color: red; font-weight: bold; }
+
+    .product-img {
+        width: 50px;
+        height: 50px;
+        object-fit: cover;
+        border-radius: 5px;
+    }
+
+    .prod-inactivo {
+        opacity: 0.45;
+    }
+</style>
+
 <section class="hero-existencias">
-    <div class="hero-content">
-        <h1>Existencias</h1>
-    </div>
+    Catálogo de productos
 </section>
 
-<div class="existencias-wrapper">
-    {{-- Filtros --}}
-    <div class="filters">
-        <input type="text" id="searchInput" placeholder="Buscar por nombre o ID..." onkeyup="filterProducts()">
-        <select id="categorySelect" onchange="filterProducts()">
-            <option value="">Filtrar por categoría</option>
-            @foreach($categorias as $cat)
-                <option value="{{ $cat->id_categoria }}">{{ $cat->nombre }}</option>
-            @endforeach
-        </select>
+<div class="container">
+
+    {{-- FILTROS --}}
+    <div class="row mb-3">
+
+        <div class="col-md-3">
+            <input type="text" id="searchInput" class="form-control"
+                placeholder="Buscar por nombre o código..."
+                onkeyup="filterProducts()">
+        </div>
+
+        <div class="col-md-2">
+            <select id="categorySelect" class="form-control" onchange="filterProducts()">
+                <option value="">Categoría</option>
+                @foreach($categorias as $cat)
+                    <option value="{{ $cat->id_categoria }}">{{ $cat->nombre }}</option>
+                @endforeach
+            </select>
+        </div>
+
+        <div class="col-md-2">
+            <select id="stockFilter" class="form-control" onchange="filterProducts()">
+                <option value="">Stock</option>
+                <option value="ok">Disponible</option>
+                <option value="low">Bajo stock</option>
+                <option value="zero">Agotado</option>
+            </select>
+        </div>
+
+        <div class="col-md-2">
+            <select id="estadoFilter" class="form-control" onchange="filterProducts()">
+                <option value="">Estado</option>
+                <option value="1">Activos</option>
+                <option value="0">Inactivos</option>
+            </select>
+        </div>
+
+        <div class="col-md-3">
+            <a href="{{ route('existencias.create') }}" class="btn btn-main w-100">
+                + Agregar producto
+            </a>
+        </div>
     </div>
 
-    {{-- Notificación --}}
+    {{-- ALERTAS --}}
     @if(session('success'))
-        <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+        <div class="alert alert-success alert-dismissible fade show">
             {{ session('success') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            <button class="btn-close" data-bs-dismiss="alert"></button>
         </div>
     @endif
 
-    {{-- Tabla --}}
-    <table id="productosTable" class="table table-striped table-bordered mt-3">
+    {{-- TABLA PRODUCTOS --}}
+    <table id="productosTable" class="table table-hover table-bordered">
         <thead class="table-dark">
             <tr>
-                <th>ID</th>
-                <th>Nombre</th>
+                <th>Img</th>
+                <th>Producto</th>
+                <th>Código</th>
+                <th>Unidad</th>
                 <th>Precio</th>
                 <th>Stock</th>
                 <th>Categoría</th>
+                <th>Estado</th>
                 <th>Acciones</th>
             </tr>
         </thead>
         <tbody>
-            @foreach($productos as $prod)
-                <tr data-id="{{ $prod->id_producto }}" 
-                    data-nombre="{{ strtolower($prod->nombre) }}" 
-                    data-categoria="{{ $prod->categoria_id }}">
-                    <td>{{ $prod->id_producto }}</td>
-                    <td>{{ $prod->nombre }}</td>
-                    <td>${{ number_format($prod->precio, 2) }}</td>
-                    <td>{{ $prod->stock }}</td>
-                    <td>{{ $prod->categoria->nombre ?? '' }}</td>
-                    <td>
-                        <a href="{{ route('existencias.edit', $prod->id_producto) }}" class="btn-edit btn btn-sm btn-primary">Editar</a>
-                        
-                        {{-- Botón eliminar --}}
-                        <button type="button" class="btn btn-sm btn-danger" 
-                                data-bs-toggle="modal" 
-                                data-bs-target="#confirmDeleteModal" 
-                                data-form-id="delete-form-{{ $prod->id_producto }}">
-                            Eliminar
-                        </button>
+        @foreach($productos as $prod)
 
-                        {{-- Formulario de eliminación oculto --}}
-                        <form id="delete-form-{{ $prod->id_producto }}" 
-                              action="{{ route('existencias.destroy', $prod->id_producto) }}" 
-                              method="POST" style="display:none;">
+            @php
+                $estadoStock =
+                    $prod->stock == 0 ? 'zero'
+                    : ($prod->stock <= $prod->stock_min ? 'low' : 'ok');
+            @endphp
+
+            <tr 
+                class="{{ $prod->activo ? '' : 'prod-inactivo' }}"
+                data-name="{{ strtolower($prod->nombre) }}"
+                data-code="{{ strtolower($prod->codigo ?? $prod->codigo_barras ?? '') }}"
+                data-category="{{ $prod->categoria_id }}"
+                data-stock="{{ $estadoStock }}"
+                data-activo="{{ $prod->activo }}"
+            >
+
+                {{-- Imagen --}}
+                <td>
+                    <img src="{{ $prod->imagenes ? asset('storage/'.$prod->imagenes) : asset('img/noimage.png') }}"
+                        class="product-img" alt="{{ $prod->nombre }}">
+                </td>
+
+                <td>{{ $prod->nombre }}</td>
+
+                {{-- Código --}}
+                <td>{{ $prod->codigo ?? $prod->codigo_barras ?? '—' }}</td>
+
+                <td>{{ $prod->unidad_venta ?? '—' }}</td>
+
+                <td>${{ number_format($prod->precio, 2) }}</td>
+
+                <td>
+                    <span class="
+                        {{ $estadoStock=='zero' ? 'stock-zero' : 
+                           ($estadoStock=='low' ? 'stock-low' : 'stock-ok') }}">
+                        {{ $prod->stock }}
+                    </span>
+                </td>
+
+                <td>{{ $prod->categoria->nombre ?? '—' }}</td>
+
+                <td>
+                    @if($prod->activo)
+                        <span class="badge bg-success">Activo</span>
+                    @else
+                        <span class="badge bg-secondary">Inactivo</span>
+                    @endif
+                </td>
+
+                <td class="text-center">
+                    <a href="{{ route('existencias.edit', $prod->id_producto) }}"
+                        class="btn btn-sm btn-main mb-1">Editar</a>
+
+                    @if($prod->activo)
+                        <form method="POST"
+                              action="{{ route('existencias.desactivar', $prod->id_producto) }}">
                             @csrf
-                            @method('DELETE')
+                            <button class="btn btn-warning btn-sm w-100 mt-1">Desactivar</button>
                         </form>
-                    </td>
-                </tr>
-            @endforeach
+                    @else
+                        <form method="POST"
+                            action="{{ route('existencias.activar', $prod->id_producto) }}"
+                            onsubmit="return confirmarActivar()">
+                            @csrf
+                            <button class="btn btn-success btn-sm w-100 mt-1">Activar</button>
+                        </form>
+                    @endif
+                </td>
+            </tr>
+        @endforeach
         </tbody>
     </table>
-
-    {{-- Botón agregar --}}
-    <div class="actions mt-3">
-        <a href="{{ route('existencias.create') }}" class="btn btn-success">Agregar Producto</a>
-    </div>
 </div>
 
-{{-- Modal de confirmación --}}
-<div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="confirmDeleteModalLabel">Confirmar Eliminación</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-      </div>
-      <div class="modal-body">
-        ¿Seguro que deseas eliminar este producto? Esta acción no se puede deshacer.
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-        <button type="button" class="btn btn-danger" id="modalDeleteButton">Eliminar</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-{{-- Script para manejar el modal --}}
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-    let formToSubmit = null;
+function filterProducts() {
+    let text = document.getElementById("searchInput").value.toLowerCase();
+    let category = document.getElementById("categorySelect").value;
+    let stock = document.getElementById("stockFilter").value;
+    let estado = document.getElementById("estadoFilter").value;
 
-    // Al abrir el modal, se captura el formulario correspondiente
-    const deleteModal = document.getElementById('confirmDeleteModal');
-    deleteModal.addEventListener('show.bs.modal', function (event) {
-        const button = event.relatedTarget;
-        const formId = button.getAttribute('data-form-id');
-        formToSubmit = document.getElementById(formId);
-    });
+    document.querySelectorAll("#productosTable tbody tr").forEach(row => {
+        let name = row.dataset.name;
+        let code = row.dataset.code;
+        let cat = row.dataset.category;
+        let stk = row.dataset.stock;
+        let active = row.dataset.activo;
 
-    // Al hacer clic en el botón "Eliminar" del modal, se envía el formulario
-    const modalDeleteButton = document.getElementById('modalDeleteButton');
-    modalDeleteButton.addEventListener('click', function () {
-        if (formToSubmit) {
-            formToSubmit.submit();
-        }
+        let match =
+            (name.includes(text) || code.includes(text)) &&
+            (!category || category === cat) &&
+            (!stock || (stock === stk && active == 1)) &&
+            (!estado || estado === active);
+
+        row.style.display = match ? "" : "none";
     });
-});
+}
+
+function confirmarActivar() {
+    return confirm("¿Estás seguro de volver a ACTIVAR este producto?");
+}
 </script>
 
 @endsection

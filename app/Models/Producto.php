@@ -11,23 +11,24 @@ class Producto extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'nombre',
-        'descripcion',
-        'precio',
-        'precio_por_kg',
-        'costo',
-        'costo_por_kg',
-        'stock',
-        'stock_min',
-        'unidad_venta',
-        'base_unidad',
-        'categoria_id',
-        'ubicacion',
-        'estado',
-        'imagenes',
         'codigo',
         'codigo_barras',
-        'id_proveedor'
+        'nombre',
+        'stock',
+        'stock_min',
+        'base_unidad',
+        'precio',
+        'costo',
+        'iva',
+        'categoria_id',
+        'unidad_venta',
+        'unidad_venta_id',
+        'descripcion',
+        'imagenes',
+        'ubicacion',
+        'estado',
+        'permite_devolucion',
+        'activo',
     ];
 
     public function categoria()
@@ -38,35 +39,5 @@ class Producto extends Model
     public function unidades()
     {
         return $this->hasMany(ProductoUnidad::class, 'id_producto');
-    }
-
-
-    public function unidadPorNombre($unidad)
-    {
-        return $this->unidades()->where('unidad', $unidad)->first();
-    }
-
-    /**
-     * Calcula el precio REAL según la cantidad y la unidad seleccionada
-     */
-    public function calcularPrecioPorCantidad($cantidad, $unidad)
-    {
-        $u = $this->unidadPorNombre($unidad);
-
-        if ($u) {
-            $cantidadEnBase = $cantidad * (float)$u->factor;
-        } else {
-            $cantidadEnBase = $cantidad;
-        }
-
-        // Precio por kg o por litro → basado en 1000 unidades base
-        if (in_array($this->base_unidad, ['g', 'ml'])) {
-            if ($this->precio_por_kg) {
-                return ($this->precio_por_kg / 1000) * $cantidadEnBase;
-            }
-        }
-
-        // Precio por pieza o unidad normal
-        return $this->precio * $cantidad;
     }
 }

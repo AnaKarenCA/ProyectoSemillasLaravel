@@ -48,25 +48,7 @@
                 </div>
             </div>
 
-            <div class="col-md-6">
-                <div class="card p-4 h-100 text-center">
-                    <h2 class="h4 mb-3">Sección de Ventas</h2>
-                    <div class="d-flex justify-content-around">
-                        <div class="text-center">
-                            <a href="#" class="text-decoration-none sales-link">
-                                <span class="material-symbols-outlined sales-icon">shopping_cart</span>
-                                <p>Punto de Venta</p>
-                            </a>
-                        </div>
-                        <div class="text-center">
-                            <a href="#" class="text-decoration-none sales-link">
-                                <span class="material-symbols-outlined sales-icon">analytics</span>
-                                <p>Reportes</p>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            
         </div>
 
         <div class="row mt-4">

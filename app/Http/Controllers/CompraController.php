@@ -83,4 +83,29 @@ class CompraController extends Controller
             return back()->with('error', 'Error en la compra: ' . $e->getMessage());
         }
     }
+    public function create()
+{
+    $proveedores = \App\Models\Proveedor::where('estado', 'Activo')->get();
+    $productos = \App\Models\Producto::where('estado', 'activo')->get();
+
+    return view('compras.create', compact('proveedores', 'productos'));
+}
+
+public function edit($id)
+{
+    $compra = \App\Models\Compra::with('detalles.producto')->findOrFail($id);
+    $proveedores = \App\Models\Proveedor::where('estado', 'Activo')->get();
+    $productos = \App\Models\Producto::where('estado', 'activo')->get();
+
+    return view('compras.edit', compact('compra', 'proveedores', 'productos'));
+}
+
+public function destroy($id)
+{
+    $compra = \App\Models\Compra::findOrFail($id);
+    $compra->delete();
+
+    return redirect()->route('compras.index')->with('success', 'Compra eliminada correctamente.');
+}
+
 }

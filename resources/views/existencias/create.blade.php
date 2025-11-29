@@ -1,93 +1,116 @@
 @extends('layouts.app')
 
-@section('title', 'Agregar Producto')
-
 @section('content')
-<div class="container mt-4">
-    <h2 class="mb-4">Agregar nuevo producto</h2>
+<style>
+    .header-box {
+        background-color: #800000;
+        color: white;
+        text-align: center;
+        padding: 12px;
+        border-radius: 6px;
+        margin-bottom: 25px;
+        font-weight: bold;
+        font-size: 22px;
+    }
 
-    {{-- Mostrar errores de validación --}}
-    @if ($errors->any())
-        <div class="alert alert-danger">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
+    .btn-red {
+        background-color: #800000;
+        color: white;
+        border: none;
+        font-weight: bold;
+    }
 
-    {{-- Formulario de creación --}}
-    <form action="{{ route('existencias.store') }}" method="POST" enctype="multipart/form-data" class="p-4 bg-light shadow rounded">
+    .btn-red:hover {
+        background-color: #a00000;
+        color: white;
+    }
+</style>
+
+<div class="container">
+    <div class="header-box">Agregar producto</div>
+@if ($errors->any())
+<div class="alert alert-danger">
+    <ul>
+        @foreach ($errors->all() as $error)
+            <li>{{ $error }}</li>
+        @endforeach
+    </ul>
+</div>
+@endif
+
+    <form action="{{ route('existencias.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
 
-        {{-- Nombre --}}
-        <div class="mb-3">
-            <label class="form-label">Nombre del producto</label>
-            <input type="text" name="nombre" class="form-control" required>
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <label class="form-label">Código de barras</label>
+                <input type="text" name="codigo_barras" class="form-control" value="{{ old('codigo_barras') }}">
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label class="form-label">Nombre del producto *</label>
+                <input type="text" name="nombre" class="form-control" required value="{{ old('nombre') }}">
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label class="form-label">Precio *</label>
+                <input type="number" name="precio" class="form-control" required step="0.01" value="{{ old('precio') }}">
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label class="form-label">Costo *</label>
+                <input type="number" name="costo" class="form-control" required step="0.01" value="{{ old('costo') }}">
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label class="form-label">IVA *</label>
+                <input type="number" name="iva" class="form-control" required step="0.01" value="{{ old('iva') }}">
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label class="form-label">Categoría *</label>
+                <select name="categoria_id" class="form-control" required>
+                    <option value="">Seleccione categoría</option>
+                    @foreach($categorias as $categoria)
+                        <option value="{{ $categoria->id_categoria }}">{{ $categoria->nombre }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label class="form-label">Unidad de venta *</label>
+                <select name="unidad_venta" class="form-control" required>
+                    <option value="">Seleccione unidad</option>
+                    @foreach($unidadesVenta as $unidad)
+                        <option value="{{ $unidad->nombre }}">{{ $unidad->nombre }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label class="form-label">Stock *</label>
+                <input type="number" name="stock" class="form-control" required value="{{ old('stock') }}">
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label class="form-label">Stock mínimo</label>
+                <input type="number" name="stock_min" class="form-control" value="{{ old('stock_min') }}">
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label class="form-label">Imagen del producto</label>
+                <input type="file" name="imagen" class="form-control">
+            </div>
+
+            <div class="col-md-12 mb-3">
+                <label>
+                    <input type="checkbox" name="permite_devolucion" value="1"> Permite devolución
+                </label>
+            </div>
         </div>
 
-        {{-- Precio --}}
-        <div class="mb-3">
-            <label class="form-label">Precio</label>
-            <input type="number" step="0.01" name="precio" class="form-control" required>
-        </div>
-
-        {{-- Costo --}}
-        <div class="mb-3">
-            <label class="form-label">Costo</label>
-            <input type="number" step="0.01" name="costo" class="form-control" required>
-        </div>
-
-        {{-- Unidad de venta --}}
-        <div class="mb-3">
-            <label class="form-label">Unidad de venta</label>
-            <input type="text" name="unidad_venta" class="form-control" required>
-        </div>
-
-        {{-- Ubicación --}}
-        <div class="mb-3">
-            <label class="form-label">Ubicación</label>
-            <input type="text" name="ubicacion" class="form-control">
-        </div>
-
-        {{-- Estado --}}
-        <div class="mb-3">
-            <label class="form-label">Estado</label>
-            <select name="estado" class="form-control">
-                <option value="activo" selected>Activo</option>
-                <option value="inactivo">Inactivo</option>
-            </select>
-        </div>
-
-        {{-- Stock --}}
-        <div class="mb-3">
-            <label class="form-label">Stock</label>
-            <input type="number" name="stock" class="form-control" required>
-        </div>
-
-        {{-- Categoría --}}
-        <div class="mb-3">
-            <label class="form-label">Categoría</label>
-            <select name="categoria_id" class="form-control" required>
-                <option value="">Seleccione categoría</option>
-                @foreach($categorias as $cat)
-                    <option value="{{ $cat->id_categoria }}">{{ $cat->nombre }}</option>
-                @endforeach
-            </select>
-        </div>
-
-        {{-- Imagen --}}
-        <div class="mb-3">
-            <label class="form-label">Imagen (opcional)</label>
-            <input type="file" name="imagen" class="form-control">
-        </div>
-
-        {{-- Botones --}}
-        <div class="d-flex gap-2">
-            <button type="submit" class="btn btn-primary">Guardar</button>
-            <a href="{{ route('existencias.index') }}" class="btn btn-secondary">Cancelar</a>
-        </div>
+        <button type="submit" class="btn btn-red">Guardar</button>
+        <a href="{{ route('existencias.index') }}" class="btn btn-secondary">Cancelar</a>
     </form>
 </div>
 @endsection

@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AuthController;  
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\RecuperarController;
 use App\Http\Controllers\ExistenciasController;
@@ -29,8 +29,8 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('clientes', ClienteController::class);
     Route::resource('proveedores', ProveedorController::class);
     Route::resource('compras', CompraController::class);
-    Route::resource('existencias', ExistenciasController::class);
     Route::resource('inventarios', InventarioController::class);
+    Route::resource('existencias', App\Http\Controllers\ExistenciasController::class);
 
     Route::get('/inventario/unidades/{id_producto}', [InventarioController::class, 'getUnidades']);
 
@@ -50,5 +50,17 @@ Route::middleware(['auth'])->group(function () {
     /** ----- REPORTES ----- */
     Route::get('/reportes', [ReportesController::class, 'index'])->name('reportes.index');
     Route::post('/reportes/generar', [ReportesController::class, 'generar'])->name('reportes.generar');
+
+
+    //existencias
+
+
+Route::post('/existencias/activar/{id}', [ExistenciasController::class, 'activar'])
+    ->name('existencias.activar');
+
+Route::post('/existencias/desactivar/{id}', [ExistenciasController::class, 'desactivar'])
+    ->name('existencias.desactivar');
+
+
 
 });
