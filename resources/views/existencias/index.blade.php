@@ -54,7 +54,7 @@
 
         <div class="col-md-3">
             <input type="text" id="searchInput" class="form-control"
-                placeholder="Buscar por nombre o código..."
+                placeholder="Buscar por nombre, código o variante..."
                 onkeyup="filterProducts()">
         </div>
 
@@ -105,10 +105,12 @@
             <tr>
                 <th>Img</th>
                 <th>Producto</th>
-                <th>Código</th>
+                <th>Variante</th>
+                <th>Código / Barras</th>
                 <th>Unidad</th>
-                <th>Precio</th>
                 <th>Stock</th>
+                <th>Stock Mín.</th>
+                
                 <th>Categoría</th>
                 <th>Estado</th>
                 <th>Acciones</th>
@@ -117,102 +119,111 @@
         <tbody>
         @foreach($productos as $prod)
 
-            @php
-                $estadoStock =
-                    $prod->stock == 0 ? 'zero'
-                    : ($prod->stock <= $prod->stock_min ? 'low' : 'ok');
-            @endphp
+        @php
+            $estadoStock =
+                $prod->stock == 0 ? 'zero'
+                : ($prod->stock <= $prod->stock_min ? 'low' : 'ok');
+        @endphp
 
-            <tr 
-                class="{{ $prod->activo ? '' : 'prod-inactivo' }}"
-                data-name="{{ strtolower($prod->nombre) }}"
-                data-code="{{ strtolower($prod->codigo ?? $prod->codigo_barras ?? '') }}"
-                data-category="{{ $prod->categoria_id }}"
-                data-stock="{{ $estadoStock }}"
-                data-activo="{{ $prod->activo }}"
-            >
+        <tr 
+            class="{{ $prod->activo ? '' : 'prod-inactivo' }}"
+            data-name="{{ strtolower($prod->nombre) }}"
+            data-variante="{{ strtolower($prod->variante ?? '') }}"
+            data-code="{{ strtolower($prod->codigo ?? $prod->codigo_barras ?? $prod->qr_code ?? '') }}"
+            data-category="{{ $prod->categoria_id }}"
+            data-stock="{{ $estadoStock }}"
+            data-activo="{{ $prod->activo }}"
+        >
 
-                {{-- Imagen --}}
-                <td>
-                    <img src="{{ $prod->imagenes ? asset('storage/'.$prod->imagenes) : asset('img/noimage.png') }}"
-                        class="product-img" alt="{{ $prod->nombre }}">
-                </td>
+            <td>
+                <img src="{{ $prod->imagenes ? asset('storage/'.$prod->imagenes) : asset('img/noimage.png') }}"
+                    class="product-img" alt="{{ $prod->nombre }}">
+            </td>
 
-                <td>{{ $prod->nombre }}</td>
+            <td>{{ $prod->nombre }}</td>
 
-                {{-- Código --}}
-                <td>{{ $prod->codigo ?? $prod->codigo_barras ?? '—' }}</td>
+            <td>{{ $prod->variante ?? '—' }}</td>
 
-                <td>{{ $prod->unidad_venta ?? '—' }}</td>
+            <td>
+                {{ $prod->codigo ?? '—' }}<br>
+                <small class="text-muted">{{ $prod->codigo_barras ?? $prod->qr_code ?? '—' }}</small>
+            </td>
 
-                <td>${{ number_format($prod->precio, 2) }}</td>
+            <td>
+                {{ $prod->unidad_venta }} 
+                <small class="text-muted">({{ $prod->base_unidad }})</small>
+            </td>
 
-                <td>
-                    <span class="
-                        {{ $estadoStock=='zero' ? 'stock-zero' : 
-                           ($estadoStock=='low' ? 'stock-low' : 'stock-ok') }}">
-                        {{ $prod->stock }}
-                    </span>
-                </td>
+            <td>
+                <span class="
+                    {{ $estadoStock=='zero' ? 'stock-zero' : 
+                    ($estadoStock=='low' ? 'stock-low' : 'stock-ok') }}">
+                    {{ $prod->stock }}
+                </span>
+            </td>
 
-                <td>{{ $prod->categoria->nombre ?? '—' }}</td>
+            <td>{{ $prod->stock_min ?? '0' }}</td>
 
-                <td>
-                    @if($prod->activo)
-                        <span class="badge bg-success">Activo</span>
-                    @else
-                        <span class="badge bg-secondary">Inactivo</span>
-                    @endif
-                </td>
 
-                <td class="text-center">
-                    <a href="{{ route('existencias.edit', $prod->id_producto) }}"
-                        class="btn btn-sm btn-main mb-1">Editar</a>
+            <td>{{ $prod->categoria->nombre ?? '—' }}</td>
 
-                    @if($prod->activo)
-                        <form method="POST"
-                              action="{{ route('existencias.desactivar', $prod->id_producto) }}">
-                            @csrf
-                            <button class="btn btn-warning btn-sm w-100 mt-1">Desactivar</button>
-                        </form>
-                    @else
-                        <form method="POST"
-                            action="{{ route('existencias.activar', $prod->id_producto) }}"
-                            onsubmit="return confirmarActivar()">
-                            @csrf
-                            <button class="btn btn-success btn-sm w-100 mt-1">Activar</button>
-                        </form>
-                    @endif
-                </td>
-            </tr>
+            <td>
+                @if($prod->activo)
+                    <span class="badge bg-success">Activo</span>
+                @else
+                    <span class="badge bg-secondary">Inactivo</span>
+                @endif
+            </td>
+
+            <td class="text-center">
+                <a href="{{ route('existencias.edit', $prod->id_producto) }}"
+                class="btn btn-sm btn-main mb-1">Editar</a>
+
+                @if($prod->activo)
+                    <form method="POST"
+                        action="{{ route('existencias.desactivar', $prod->id_producto) }}">
+                        @csrf
+                        <button class="btn btn-warning btn-sm w-100 mt-1">Desactivar</button>
+                    </form>
+                @else
+                    <form method="POST"
+                        action="{{ route('existencias.activar', $prod->id_producto) }}"
+                        onsubmit="return confirmarActivar()">
+                        @csrf
+                        <button class="btn btn-success btn-sm w-100 mt-1">Activar</button>
+                    </form>
+                @endif
+            </td>
+        </tr>
         @endforeach
         </tbody>
-    </table>
-</div>
+            </table>
+        </div>
 
-<script>
-function filterProducts() {
-    let text = document.getElementById("searchInput").value.toLowerCase();
-    let category = document.getElementById("categorySelect").value;
-    let stock = document.getElementById("stockFilter").value;
-    let estado = document.getElementById("estadoFilter").value;
+        <script>
+        function filterProducts() {
+            let text = document.getElementById("searchInput").value.toLowerCase();
+            let category = document.getElementById("categorySelect").value;
+            let stock = document.getElementById("stockFilter").value;
+            let estado = document.getElementById("estadoFilter").value;
 
-    document.querySelectorAll("#productosTable tbody tr").forEach(row => {
-        let name = row.dataset.name;
-        let code = row.dataset.code;
-        let cat = row.dataset.category;
-        let stk = row.dataset.stock;
-        let active = row.dataset.activo;
+            document.querySelectorAll("#productosTable tbody tr").forEach(row => {
+                let name = row.dataset.name;
+                let variante = row.dataset.variante;
+                let code = row.dataset.code;
+                let cat = row.dataset.category;
+                let stk = row.dataset.stock;
+                let active = row.dataset.activo;
 
-        let match =
-            (name.includes(text) || code.includes(text)) &&
-            (!category || category === cat) &&
-            (!stock || (stock === stk && active == 1)) &&
-            (!estado || estado === active);
+                let match =
+                    (name.includes(text) || code.includes(text) || variante.includes(text)) &&
+                    (!category || category === cat) &&
+                    (!stock || (stock === stk && active == 1)) &&
+                    (!estado || estado === active);
 
-        row.style.display = match ? "" : "none";
-    });
-}
+                row.style.display = match ? "" : "none";
+            });
+        }
 
 function confirmarActivar() {
     return confirm("¿Estás seguro de volver a ACTIVAR este producto?");

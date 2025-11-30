@@ -7,6 +7,9 @@ use App\Models\Producto;
 use App\Models\Categoria;
 use App\Models\UnidadVenta;
 use Illuminate\Support\Facades\Storage;
+use App\Models\Proveedor;
+use Illuminate\Validation\Rule;
+
 
 class ExistenciasController extends Controller
 {
@@ -28,8 +31,10 @@ class ExistenciasController extends Controller
     {
         $categorias = Categoria::all();
         $unidadesVenta = UnidadVenta::all();
+        $proveedores = Proveedor::where('estado', 'Activo')->get(); // <-- agregado
 
-        return view('existencias.create', compact('categorias', 'unidadesVenta'));
+
+    return view('existencias.create', compact('categorias', 'unidadesVenta', 'proveedores'));
     }
 
     /* =======================================================
@@ -40,8 +45,18 @@ class ExistenciasController extends Controller
         $validated = $request->validate([
             'codigo' => 'nullable|string|max:50|unique:productos,codigo',
             'codigo_barras' => 'nullable|string|max:50|unique:productos,codigo_barras',
-            'nombre' => 'required|string|max:255|unique:productos,nombre',
+            'nombre' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('productos')->where(function ($query) use ($request) {
+                    return $query->where('variante', $request->variante);
+                })
+            ],
+
             'precio' => 'required|numeric|min:0',
+            'variante' => 'nullable|string|max:255',
+
             'costo' => 'required|numeric|min:0',
             'iva' => 'required|numeric|min:0',
             'categoria_id' => 'required|integer',
@@ -51,20 +66,32 @@ class ExistenciasController extends Controller
             'imagen' => 'nullable|image|mimes:jpg,png,jpeg|max:2048'
         ]);
 
-        // Subir imagen
+        // Generación automática
+        if (!$request->filled('codigo')) {
+            $validated['codigo'] = Producto::generarSKU($request->nombre);
+        }
+
+        if (!$request->filled('codigo_barras')) {
+            $validated['codigo_barras'] = Producto::generarEAN13();
+        }
+
+        $validated['qr_code'] = Producto::generarCodigoQR($request->nombre);
+
         if ($request->hasFile('imagen')) {
             $validated['imagenes'] = $request->file('imagen')->store('productos', 'public');
         }
+        $validated['variante'] = $request->variante;
 
         $validated['activo'] = 1;
         $validated['permite_devolucion'] = $request->has('permite_devolucion') ? 1 : 0;
 
         Producto::create($validated);
 
-        return redirect()
-            ->route('existencias.index')
-            ->with('success', 'Producto agregado correctamente.');
+        return redirect()->route('existencias.index')
+                        ->with('success', 'Producto agregado correctamente.');
     }
+
+
 
     /* =======================================================
         FORMULARIO EDITAR
@@ -77,7 +104,7 @@ class ExistenciasController extends Controller
 
         return view('existencias.edit', compact('producto', 'categorias', 'unidadesVenta'));
     }
-
+    
     /* =======================================================
         ACTUALIZAR PRODUCTO
     ======================================================= */
@@ -88,7 +115,18 @@ class ExistenciasController extends Controller
         $validated = $request->validate([
             'codigo' => 'nullable|string|max:50|unique:productos,codigo,' . $producto->id_producto . ',id_producto',
             'codigo_barras' => 'nullable|string|max:50|unique:productos,codigo_barras,' . $producto->id_producto . ',id_producto',
-            'nombre' => 'required|string|max:255|unique:productos,nombre,' . $producto->id_producto . ',id_producto',
+            'nombre' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('productos')
+                    ->ignore($producto->id_producto, 'id_producto')
+                    ->where(function ($query) use ($request) {
+                        return $query->where('variante', $request->variante);
+                    })
+            ],
+
+            'variante' => 'nullable|string|max:255',
             'precio' => 'required|numeric|min:0',
             'costo' => 'required|numeric|min:0',
             'iva' => 'required|numeric|min:0',
@@ -99,7 +137,12 @@ class ExistenciasController extends Controller
             'imagen' => 'nullable|image|mimes:jpg,png,jpeg|max:2048'
         ]);
 
-        // Si sube nueva imagen, borrar la anterior
+        // Si no tiene código, generarlo
+        if (!$producto->codigo && !$request->filled('codigo')) {
+            $validated['codigo'] = Producto::generarSKU($request->nombre);
+        }
+
+        // Manejo de imagen
         if ($request->hasFile('imagen')) {
             if ($producto->imagenes) {
                 Storage::disk('public')->delete($producto->imagenes);
@@ -108,6 +151,7 @@ class ExistenciasController extends Controller
         }
 
         $validated['permite_devolucion'] = $request->has('permite_devolucion') ? 1 : 0;
+        $validated['variante'] = $request->variante;
 
         $producto->update($validated);
 

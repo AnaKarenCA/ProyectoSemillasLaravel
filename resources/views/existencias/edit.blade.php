@@ -53,6 +53,12 @@
                 <input type="text" name="nombre" class="form-control" required value="{{ $producto->nombre }}">
             </div>
 
+            {{-- NUEVO CAMPO VARIANTE --}}
+            <div class="col-md-4 mb-3">
+                <label class="form-label">Variante</label>
+                <input type="text" name="variante" class="form-control" value="{{ $producto->variante }}">
+            </div>
+
             <div class="col-md-4 mb-3">
                 <label class="form-label">Precio *</label>
                 <input type="number" name="precio" class="form-control" required step="0.01" value="{{ $producto->precio }}">
@@ -101,17 +107,16 @@
             </div>
 
             <div class="col-md-4 mb-3">
-            <label class="form-label">Imagen</label>
-            <input type="file" name="imagen" class="form-control">
+                <label class="form-label">Imagen</label>
+                <input type="file" name="imagen" class="form-control">
 
-            @if($producto->imagenes)
-                <div class="mt-2">
-                    <p>Imagen actual:</p>
-                    <img src="{{ asset('storage/' . $producto->imagenes) }}" style="width:120px; border-radius:10px;">
-                </div>
-            @endif
-        </div>
-
+                @if($producto->imagenes)
+                    <div class="mt-2">
+                        <p>Imagen actual:</p>
+                        <img src="{{ asset('storage/' . $producto->imagenes) }}" style="width:120px; border-radius:10px;">
+                    </div>
+                @endif
+            </div>
 
             <div class="col-md-12 mb-3">
                 <label>
